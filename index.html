@@ -50,7 +50,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .sp-prog-track{height:3px;background:var(--g4);border:1px solid var(--g3);}
 .sp-prog-fill{height:100%;background:var(--green);box-shadow:var(--glow);width:0%;transition:width .06s linear;}
 /* APP */
-html,body{margin:0;padding:0;} #app{display:none;flex-direction:column;position:relative;z-index:1;}
+#app{display:none;flex-direction:column;position:relative;z-index:1;}
 #app.show{display:block;}
 /* TOPBAR */
 #topbar{background:#000;border-bottom:2px solid var(--green);display:flex;align-items:stretch;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px #00ff4122;}
@@ -70,7 +70,7 @@ html,body{margin:0;padding:0;} #app{display:none;flex-direction:column;position:
 .tb-av-sm{width:22px;height:22px;border-radius:50%;border:1px solid var(--green);overflow:hidden;background:var(--g3);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
 .tb-av-sm img{width:100%;height:100%;object-fit:cover;}
 /* ANNOUNCE BANNER */
-#announceBanner{display:none;position:sticky;top:0;z-index:98;padding:9px 20px;font-size:12px;letter-spacing:2px;text-align:center;border-bottom:2px solid;animation:slideDown .4s ease;}
+#announceBanner{display:none;position:sticky;top:0;left:0;right:0;z-index:99;padding:9px 20px;font-size:12px;letter-spacing:2px;text-align:center;border-bottom:2px solid;animation:slideDown .4s ease;}
 @keyframes slideDown{from{transform:translateY(-100%)}to{transform:translateY(0)}}
 #announceBanner.type-info{background:#001a33;border-color:var(--blue);color:var(--blue);}
 #announceBanner.type-warn{background:#1a1000;border-color:var(--gold);color:var(--gold);}
@@ -363,16 +363,6 @@ body.disco{filter:hue-rotate(0deg);animation:discoHue .4s linear infinite;}
 .threat-meter{width:100%;height:12px;background:var(--border);border-radius:2px;overflow:hidden;margin:6px 0;}
 .threat-meter-fill{height:100%;transition:width .6s ease;}
 .flag-emoji{font-size:16px;vertical-align:middle;}
-
-/* ── SCANNER COMMENTS ── */
-.scan-comment{padding:10px;border-bottom:1px solid var(--border);display:flex;gap:9px;}
-.scan-comment:last-child{border-bottom:none;}
-.scan-comment-av{width:28px;height:28px;border:1px solid var(--g3);border-radius:2px;background:var(--g4);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;color:var(--green);}
-.scan-comment-body{flex:1;}
-.scan-comment-user{font-size:10px;color:var(--bright);margin-bottom:2px;}
-.scan-comment-user.mod{color:var(--gold);}
-.scan-comment-text{font-size:10px;color:var(--text);line-height:1.7;word-break:break-word;}
-.scan-comment-meta{font-size:8px;color:var(--dim);margin-top:3px;}
 </style>
 </head>
 <body>
@@ -947,7 +937,7 @@ body.disco{filter:hue-rotate(0deg);animation:discoHue .4s linear infinite;}
         </div>
       </div>
       <!-- GAME + CHAT SIDE BY SIDE -->
-      <div style="display:grid;grid-template-columns:1fr 280px;gap:12px;align-items:start;">
+      <div style="display:grid;grid-template-columns:1fr 280px;gap:12px;">
         <div>
           <div style="padding:9px 11px;border:1px solid var(--border);border-bottom:none;background:var(--panel);display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
             <span style="font-size:10px;color:var(--dim);">WASD/Arrows = move</span>
@@ -1143,20 +1133,6 @@ body.disco{filter:hue-rotate(0deg);animation:discoHue .4s linear infinite;}
           </div>
         </div>
       </div>
-      <!-- COMMENTS (shown when scan is active) -->
-      <div class="t-panel" id="urlCommentsPanel" style="display:none;margin-top:14px;">
-        <div class="t-panel-hdr"><span class="t-panel-title">💬 COMMUNITY COMMENTS</span><span id="urlCommentCount" style="font-size:9px;color:var(--dim);margin-left:8px;"></span></div>
-        <div class="t-panel-body">
-          <div id="urlCommentsList" style="max-height:200px;overflow-y:auto;margin-bottom:12px;"></div>
-          <div id="urlCommentForm">
-            <div style="display:flex;gap:8px;">
-              <input class="f-input" id="urlCommentInput" placeholder="Add your findings or comment about this URL..." style="flex:1" onkeydown="if(event.key==='Enter')submitUrlComment()">
-              <button class="btn btn-sm" onclick="submitUrlComment()">POST</button>
-            </div>
-            <div style="font-size:9px;color:var(--dim);margin-top:4px;">Login to post · Comments are linked to this URL's domain</div>
-          </div>
-        </div>
-      </div>
       <!-- HISTORY -->
       <div class="t-panel" style="margin-top:14px;">
         <div class="t-panel-hdr"><span class="t-panel-title">📋 SCAN HISTORY</span><button class="btn btn-sm btn-red" onclick="clearUrlHistory()" style="margin-left:auto;font-size:9px;">✕ CLEAR</button></div>
@@ -1237,21 +1213,6 @@ body.disco{filter:hue-rotate(0deg);animation:discoHue .4s linear infinite;}
           </div>
           <div class="scan-tab-body" id="fstab-strings">
             <div id="fileStringsContent"></div>
-          </div>
-        </div>
-      </div>
-      <!-- COMMENTS -->
-      <div class="t-panel" id="fileCommentsPanel" style="display:none;margin-top:14px;">
-        <div class="t-panel-hdr"><span class="t-panel-title">💬 COMMUNITY COMMENTS</span><span id="fileCommentCount" style="font-size:9px;color:var(--dim);margin-left:8px;"></span></div>
-        <div class="t-panel-body">
-          <div style="font-size:9px;color:var(--dim);margin-bottom:10px;">Comments are linked to the file's SHA-256 hash — others who scan the same file see these.</div>
-          <div id="fileCommentsList" style="max-height:200px;overflow-y:auto;margin-bottom:12px;"></div>
-          <div id="fileCommentForm">
-            <div style="display:flex;gap:8px;">
-              <input class="f-input" id="fileCommentInput" placeholder="Share what you found about this file..." style="flex:1" onkeydown="if(event.key==='Enter')submitFileComment()">
-              <button class="btn btn-sm" onclick="submitFileComment()">POST</button>
-            </div>
-            <div style="font-size:9px;color:var(--dim);margin-top:4px;">Login to post a comment</div>
           </div>
         </div>
       </div>
@@ -1352,6 +1313,31 @@ body.disco{filter:hue-rotate(0deg);animation:discoHue .4s linear infinite;}
 
 <div id="toast"></div>
 <script>
+
+/* ══════════════════════════════════════════════
+   BACKEND API — Railway server
+   https://unforgiven-backend-production.up.railway.app
+═══════════════════════════════════════════════ */
+var API_BASE = 'https://unforgiven-backend-production.up.railway.app';
+var _authToken = null;
+
+async function api(method, path, body, noAuth) {
+  if (!API_BASE) return null;
+  var headers = {'Content-Type':'application/json'};
+  if (_authToken && !noAuth) headers['Authorization'] = 'Bearer ' + _authToken;
+  try {
+    var res = await fetch(API_BASE + path, {
+      method: method, headers: headers,
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!res.ok) { var e = await res.json().catch(function(){return{};});throw new Error(e.error||'HTTP '+res.status); }
+    return await res.json();
+  } catch(e) {
+    console.warn('[API] Backend unreachable, using localStorage fallback:', e.message);
+    return null;
+  }
+}
+
 /* WEBHOOK RESOLVER */
 function _wh(k){
   var _m={
@@ -1442,12 +1428,87 @@ function setTheme(name,swatchEl){
   toast('Theme: '+name);
 }
 
+/* ══════════════════════════════════════════════
+   PERSISTENCE — localStorage + cross-version
+   Keys are never wiped — only appended to.
+═══════════════════════════════════════════════ */
+var USERS_KEY  = 'tbv5:users';
+var POSTS_KEY  = 'tbv5:posts';
+var FORUM_KEY  = 'tbv5:forum';
+var EVENTS_KEY = 'tbv5:events';
+var CHAT_KEY   = 'tbv5:chat';
+var VC_KEY     = 'tbv5:vc';
+var HP_KEY     = 'tbv5:players';
+
+/* Migration: copy old keys to new if they exist */
+(function migrateLegacy(){
+  var oldKeys={
+    'tb:users':USERS_KEY,'tb:posts':POSTS_KEY,'tb:forum':FORUM_KEY,
+    'tb:events':EVENTS_KEY,'tb:hangout_chat':CHAT_KEY,'tb:vc':VC_KEY,'tb:hangout_players':HP_KEY
+  };
+  Object.keys(oldKeys).forEach(function(old){
+    var nk=oldKeys[old];
+    try{
+      var ov=localStorage.getItem(old);
+      var nv=localStorage.getItem(nk);
+      if(ov&&!nv){
+        /* Merge arrays */
+        try{var oa=JSON.parse(ov);var na=nv?JSON.parse(nv):[];
+          if(Array.isArray(oa)&&Array.isArray(na)){localStorage.setItem(nk,JSON.stringify(na.concat(oa)));}
+          else if(!nv){localStorage.setItem(nk,ov);}
+        }catch(e){if(!nv)localStorage.setItem(nk,ov);}
+      }
+    }catch(e){}
+  });
+})();
+
+function lsGet(key,fallback){try{var v=localStorage.getItem(key);return v?JSON.parse(v):fallback;}catch(e){return fallback;}}
+function lsSet(key,val){try{localStorage.setItem(key,JSON.stringify(val));}catch(e){}}
+
+function getUsers(){return lsGet(USERS_KEY,{});}
+function saveUsers(u){lsSet(USERS_KEY,u);}
+function getAllPosts(){return lsGet(POSTS_KEY,[]);}
+function savePosts(p){lsSet(POSTS_KEY,p);}
+function getForumThreads(){return lsGet(FORUM_KEY,[]);}
+function saveForumThreads(t){lsSet(FORUM_KEY,t);}
+function getEvents(){return lsGet(EVENTS_KEY,[]);}
+function saveEvents(e){lsSet(EVENTS_KEY,e);}
+function getChatMsgs(){return lsGet(CHAT_KEY,[]);}
+function saveChatMsgs(m){lsSet(CHAT_KEY,m);}
+function getVcUsers(){return lsGet(VC_KEY,[]);}
+function saveVcUsers(u){lsSet(VC_KEY,u);}
+function getHangoutPlayers(){return lsGet(HP_KEY,[]);}
+function saveHangoutPlayers(p){lsSet(HP_KEY,p);}
 
 /* ══════════════════════════════════════════════
-   BACKEND API LAYER
-   Set API_BASE to your Railway backend URL.
-   Leave as empty string '' to use localStorage fallback.
+   ACCOUNT SYSTEM
 ═══════════════════════════════════════════════ */
+var currentUser=null;
+function hashPass(p){var h=0;for(var i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0;}return 'H'+Math.abs(h).toString(36)+'X'+(p.length*7).toString(36);}
+function genToken(u){var ch='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',a=new Uint32Array(18);crypto.getRandomValues(a);var s=function(n,o){var r='';for(var i=0;i<n;i++)r+=ch[a[o+i]%ch.length];return r;};return 'UTB-'+s(8,0)+'-'+s(6,8)+'-'+s(4,14);}
+
+var MOD_ACCOUNT={username:'Unforgiven',passHash:hashPass('VBWygpbLt74UC8W'),isMod:true,joined:new Date('2024-01-01').getTime(),bio:"Developer & Creator of Unforgiven's ToolBox.",avatar:'',bannerColor:'#003d0a',strikes:0,posts:0,settings:{},accessories:{mask:'hacker',outfit:'hoodie',extra:'none'}};
+
+function ensureModAccount(){var users=getUsers();if(!users['unforgiven']){users['unforgiven']=MOD_ACCOUNT;saveUsers(users);}}
+
+function requireAuth(cb){if(currentUser){cb();return;}showLogin();openModal('authModal');window._authCb=cb;}
+function openAccountPanel(){if(currentUser){nav('settings',null);}else{showLogin();openModal('authModal');}}
+function showLogin(){document.getElementById('authLoginView').style.display='block';document.getElementById('authRegView').style.display='none';document.getElementById('authTitle').textContent='LOGIN';}
+function showRegister(){document.getElementById('authLoginView').style.display='none';document.getElementById('authRegView').style.display='block';document.getElementById('authTitle').textContent='REGISTER';}
+
+function checkUsername(){
+  var u=(document.getElementById('regUser').value||'').trim(),fb=document.getElementById('regUserFeedback');
+  if(!u){fb.textContent='';return;}
+  if(!/^[a-zA-Z0-9_]{3,20}$/.test(u)){fb.className='inline-err';fb.textContent='3-20 chars, letters/numbers/_ only';return;}
+  var users=getUsers();
+  if(users[u.toLowerCase()]||u.toLowerCase()==='unforgiven'){fb.className='inline-err';fb.textContent='Username taken';return;}
+  fb.className='inline-ok';fb.textContent='✓ Available';
+}
+
+
+/* ── Local auth utilities (keep for fallback) ── */
+
+
 /**
  * UNFORGIVEN TOOLBOX — Frontend API Layer
  * Paste this entire file's content into unforgiven-toolbox.html
@@ -1460,7 +1521,7 @@ function setTheme(name,swatchEl){
 /* ═══════════════════════════════════════════════════════
    CONFIG — change this to your deployed backend URL
 ═══════════════════════════════════════════════════════ */
-var API_BASE = 'https://unforgiven-backend-production.up.railway.app';
+var API_BASE = 'https://your-backend.up.railway.app'; /* ← CHANGE THIS */
 var _authToken = null; /* JWT stored in memory (not localStorage for security) */
 
 /* ═══════════════════════════════════════════════════════
@@ -2023,6 +2084,1542 @@ function loadInitialData() {
 }
 
 
+function renderAccGrid(){
+  ['mask','outfit','extra'].forEach(function(type){
+    var el=document.getElementById('acc'+type.charAt(0).toUpperCase()+type.slice(1)+'Grid');
+    if(!el)return;
+    var cur=(currentUser&&currentUser.accessories&&currentUser.accessories[type])||playerAccs[type]||'none';
+    el.innerHTML=ACCESSORIES[type].map(function(a){
+      return '<div class="acc-item'+(cur===a.id?' selected':'')+'" onclick="selectAcc(\''+type+'\',\''+a.id+'\',this)"><div class="acc-preview">'+a.emoji+'</div><div class="acc-name">'+a.label+'</div></div>';
+    }).join('');
+  });
+  drawAccPreview();
+}
+function selectAcc(type,id,el){
+  playerAccs[type]=id;
+  document.querySelectorAll('.acc-item').forEach(function(i){i.classList.remove('selected');});
+  el.classList.add('selected');
+  drawAccPreview();
+}
+function saveAccessories(){
+  if(!currentUser){toast('Login to save',true);return;}
+  currentUser.accessories=Object.assign({},playerAccs);
+  var users=getUsers(),k=currentUser.username.toLowerCase();
+  if(users[k]){users[k].accessories=currentUser.accessories;saveUsers(users);}
+  toast('Accessories saved!');
+}
+function drawAccPreview(){
+  var canvas=document.getElementById('accPreviewCanvas');if(!canvas)return;
+  var ctx=canvas.getContext('2d');ctx.clearRect(0,0,80,100);
+  /* Draw player */
+  var col=hangoutPlayer?hangoutPlayer.color:'#00ff41';
+  ctx.fillStyle=col;
+  ctx.fillRect(28,40,24,28);
+  ctx.fillStyle='#000';ctx.beginPath();ctx.arc(40,32,13,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle=col;ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle=col;
+  ctx.beginPath();ctx.ellipse(36,30,3,3.5,-0.2,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(44,30,3,3.5,0.2,0,Math.PI*2);ctx.fill();
+  /* Accessories */
+  ctx.font='14px serif';ctx.textAlign='center';
+  var m=ACCESSORIES.mask.find(function(a){return a.id===playerAccs.mask;});
+  var o=ACCESSORIES.outfit.find(function(a){return a.id===playerAccs.outfit;});
+  var x=ACCESSORIES.extra.find(function(a){return a.id===playerAccs.extra;});
+  if(m&&m.id!=='none')ctx.fillText(m.emoji,40,25);
+  if(o&&o.id!=='none')ctx.fillText(o.emoji,40,70);
+  if(x&&x.id!=='none')ctx.fillText(x.emoji,62,50);
+}
+
+
+
+function applyDiscoOn(){
+  var btn=document.getElementById('discoBtn'),ov=document.getElementById('discoOverlay');
+  document.body.classList.add('disco');
+  if(ov)ov.style.display='block';
+  if(btn){btn.textContent='🪩 DISCO ON';btn.style.borderColor='var(--gold)';btn.style.color='var(--gold)';}
+  showBanner('🪩 DISCO MODE IS ACTIVE — LETS GO!!','event');
+}
+function applyDiscoOff(){
+  var btn=document.getElementById('discoBtn'),ov=document.getElementById('discoOverlay');
+  document.body.classList.remove('disco');
+  if(ov)ov.style.display='none';
+  if(btn){btn.textContent='🪩 DISCO OFF';btn.style.borderColor='';btn.style.color='';}
+  closeBanner();
+}
+function runDiscoCountdown(cb){
+  var overlay=document.getElementById('discoCountdown');
+  var numEl=document.getElementById('discoCountNum');
+  var actEl=document.getElementById('discoActivateText');
+  if(!overlay){cb();return;}
+  overlay.classList.add('show');
+  actEl.style.display='none';
+  var count=3;
+  numEl.textContent=count;
+  numEl.style.fontSize='180px';
+  var iv=setInterval(function(){
+    count--;
+    if(count>0){
+      numEl.textContent=count;
+      numEl.style.fontSize=(180+count*30)+'px';
+      numEl.style.color=count===2?'#ff9900':count===1?'#ff3333':'var(--green)';
+      numEl.style.textShadow='0 0 60px currentColor,0 0 120px currentColor';
+    } else {
+      clearInterval(iv);
+      numEl.textContent='GO!';
+      numEl.style.fontSize='260px';
+      numEl.style.color='var(--gold)';
+      actEl.style.display='block';
+      setTimeout(function(){
+        overlay.classList.remove('show');
+        numEl.style.fontSize='180px';
+        actEl.style.display='none';
+        cb();
+      },900);
+    }
+  },900);
+}
+
+
+/* ══════════════════════════════════════════════
+   WEBRTC VOICE CHAT
+   For real cross-device voice: deploy voice-server/server.js
+   then set VOICE_SERVER_URL to your server's HTTPS URL.
+═══════════════════════════════════════════════ */
+/* ─ Set to your deployed server URL (e.g. https://yourapp.railway.app) ─ */
+var VOICE_SERVER_URL='';
+var vcJoined=false,vcMuted=false,localStream=null;
+var peerConnections={};
+var _peerConns={};
+var _socket=null;
+var _signalingConnected=false;
+var SIGNAL_KEY='tbv5:wrtc_signals';
+
+/* ── Signaling server connection ── */
+function tryConnectSignaling(){
+  if(!VOICE_SERVER_URL||_signalingConnected)return;
+  try{
+    var script=document.createElement('script');
+    script.src=VOICE_SERVER_URL+'/socket.io/socket.io.js';
+    script.onload=function(){
+      try{
+        _socket=window.io(VOICE_SERVER_URL,{transports:['websocket'],secure:true,rejectUnauthorized:false});
+        _socket.on('connect',function(){
+          _signalingConnected=true;
+          var room='hangout_main';
+          var username=currentUser?currentUser.username:(hangoutPlayer.name||'Guest');
+          _socket.emit('join-room',{room:room,username:username});
+          toast('🎙 Voice server connected!');
+        });
+        _socket.on('room-users',function(data){
+          (data.users||[]).forEach(function(u){
+            if(u.id!==_socket.id&&!_peerConns[u.id])createPeerConnection(u.id,true);
+          });
+        });
+        _socket.on('user-joined',function(data){
+          if(data.socketId!==_socket.id&&!_peerConns[data.socketId])createPeerConnection(data.socketId,true);
+        });
+        _socket.on('user-left',function(data){cleanupPeer(data.socketId);});
+        _socket.on('offer',handleOffer);
+        _socket.on('answer',handleAnswer);
+        _socket.on('ice-candidate',handleIceCandidate);
+        _socket.on('chat-message',function(msg){
+          var entry={name:msg.username,text:msg.text,ts:msg.ts,color:'#00aaff',room:currentRoom};
+          var msgs=getChatMsgs();msgs.push(entry);if(msgs.length>100)msgs=msgs.slice(-100);saveChatMsgs(msgs);
+          renderHangoutChat();
+        });
+        _socket.on('disconnect',function(){_signalingConnected=false;});
+      }catch(e){console.warn('Socket.IO init error:',e);}
+    };
+    script.onerror=function(){toast('Voice server unreachable — using presence-only mode','warn');};
+    document.head.appendChild(script);
+  }catch(e){console.warn('Signaling connect error:',e);}
+}
+
+/* ── WebRTC peer connection helpers ── */
+async function createPeerConnection(peerId,isInitiator){
+  if(_peerConns[peerId])return _peerConns[peerId];
+  var pc=new RTCPeerConnection({iceServers:[
+    {urls:'stun:stun.l.google.com:19302'},
+    {urls:'stun:stun1.l.google.com:19302'},
+    {urls:'stun:global.stun.twilio.com:3478'}
+  ]});
+  _peerConns[peerId]=pc;
+  if(localStream)localStream.getTracks().forEach(function(t){pc.addTrack(t,localStream);});
+  pc.ontrack=function(e){
+    var audio=document.getElementById('remote_'+peerId);
+    if(!audio){
+      audio=document.createElement('audio');audio.id='remote_'+peerId;
+      audio.autoplay=true;audio.controls=false;
+      document.getElementById('remoteAudios').appendChild(audio);
+    }
+    audio.srcObject=e.streams[0];
+  };
+  pc.onicecandidate=function(e){
+    if(e.candidate&&_socket)_socket.emit('ice-candidate',{to:peerId,candidate:e.candidate});
+  };
+  pc.onconnectionstatechange=function(){
+    if(pc.connectionState==='failed'||pc.connectionState==='closed')cleanupPeer(peerId);
+  };
+  if(isInitiator){
+    var offer=await pc.createOffer({offerToReceiveAudio:true});
+    await pc.setLocalDescription(offer);
+    if(_socket)_socket.emit('offer',{to:peerId,offer:offer});
+  }
+  return pc;
+}
+async function handleOffer(data){
+  var pc=await createPeerConnection(data.from,false);
+  await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
+  var answer=await pc.createAnswer();
+  await pc.setLocalDescription(answer);
+  if(_socket)_socket.emit('answer',{to:data.from,answer:answer});
+}
+async function handleAnswer(data){
+  var pc=_peerConns[data.from];
+  if(pc&&pc.signalingState!=='stable')await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
+}
+async function handleIceCandidate(data){
+  var pc=_peerConns[data.from];
+  try{if(pc&&data.candidate)await pc.addIceCandidate(new RTCIceCandidate(data.candidate));}catch(e){}
+}
+function cleanupPeer(peerId){
+  if(_peerConns[peerId]){_peerConns[peerId].close();delete _peerConns[peerId];}
+  var audio=document.getElementById('remote_'+peerId);if(audio)audio.remove();
+}
+
+function getMyVcName(){return currentUser?currentUser.username:(hangoutPlayer.name||'Guest');}
+
+async function toggleVoice(){
+  if(!vcJoined){
+    try{
+      /* Step 1: Request permission - this unlocks real device labels */
+      localStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+      document.getElementById('localAudio').srcObject=localStream;
+      vcJoined=true;
+      /* Step 2: NOW enumerate with real labels available */
+      await listAudioDevices();
+      document.getElementById('vcAudioControls').style.display='flex';
+      /* Step 3: Try connecting to voice signaling server if configured */
+      if(VOICE_SERVER_URL)tryConnectSignaling();
+      var users=getVcUsers().filter(function(u){return u.name!==getMyVcName();});
+      users.push({name:getMyVcName(),muted:false,ts:Date.now()});
+      saveVcUsers(users);renderVcBar(users);
+      document.getElementById('vcJoinBtn').textContent='🔴 LEAVE VOICE';
+      document.getElementById('vcMuteBtn').style.display='inline-flex';
+      toast('Joined voice channel! 🎙');
+      vcPollInterval=setInterval(vcHeartbeat,2000);
+    }catch(e){toast('Microphone access denied. Check browser permissions.',true);}
+  }else{leaveVoice();}
+}
+
+async function listAudioDevices(){
+  var micSel=document.getElementById('vcMicSelect'),spkSel=document.getElementById('vcSpeakerSelect');
+  if(!micSel)return;
+  micSel.innerHTML='<option value="">Detecting devices...</option>';
+  spkSel.innerHTML='<option value="">Detecting devices...</option>';
+  try{
+    /* enumerateDevices after getUserMedia gives real labels */
+    var devices=await navigator.mediaDevices.enumerateDevices();
+    micSel.innerHTML='';spkSel.innerHTML='';
+    var micCount=0,spkCount=0;
+    devices.forEach(function(d){
+      var opt=document.createElement('option');
+      opt.value=d.deviceId;
+      /* Real label from browser (only available after permission granted) */
+      var lbl=d.label&&d.label.trim()?d.label.replace(/\s*\(.*\)$/,'').trim()
+              :(d.kind==='audioinput'?'Microphone #'+(++micCount):'Speaker #'+(++spkCount));
+      opt.textContent=lbl;
+      if(d.kind==='audioinput'){micSel.appendChild(opt);}
+      else if(d.kind==='audiooutput'){spkSel.appendChild(opt);}
+    });
+    if(micSel.options.length===0){
+      var o=document.createElement('option');o.textContent='Default Mic';o.value='default';micSel.appendChild(o);
+    }
+    if(spkSel.options.length===0){
+      var o=document.createElement('option');o.textContent='Default Speaker';o.value='default';spkSel.appendChild(o);
+    }
+    /* Select the active track's device if available */
+    if(localStream){
+      var track=localStream.getAudioTracks()[0];
+      if(track){
+        var settings=track.getSettings();
+        if(settings.deviceId){micSel.value=settings.deviceId;}
+      }
+    }
+  }catch(e){
+    micSel.innerHTML='<option value="default">Default Microphone</option>';
+    spkSel.innerHTML='<option value="default">Default Speaker</option>';
+    console.warn('Device enumerate error:',e);
+  }
+}
+async function changeMic(){
+  var deviceId=document.getElementById('vcMicSelect').value;
+  if(localStream){localStream.getTracks().forEach(function(t){t.stop();});}
+  try{localStream=await navigator.mediaDevices.getUserMedia({audio:{deviceId:{exact:deviceId}},video:false});document.getElementById('localAudio').srcObject=localStream;}catch(e){toast('Could not switch mic',true);}
+}
+function changeSpeaker(){
+  var deviceId=document.getElementById('vcSpeakerSelect').value;
+  document.querySelectorAll('audio').forEach(function(a){if(a.setSinkId)a.setSinkId(deviceId).catch(function(){});});
+}
+
+function leaveVoice(){
+  vcJoined=false;
+  /* Disconnect from signaling */
+  if(_socket&&_signalingConnected){_socket.disconnect();_socket=null;_signalingConnected=false;}
+  Object.keys(_peerConns).forEach(cleanupPeer);
+  if(localStream){localStream.getTracks().forEach(function(t){t.stop()});}
+  Object.values(peerConnections).forEach(function(pc){pc.close();});peerConnections={};
+  saveVcUsers(getVcUsers().filter(function(u){return u.name!==getMyVcName();}));
+  renderVcBar(getVcUsers());
+  document.getElementById('vcJoinBtn').textContent='🎙 JOIN VOICE';
+  document.getElementById('vcMuteBtn').style.display='none';
+  document.getElementById('vcAudioControls').style.display='none';
+  clearInterval(vcPollInterval);toast('Left voice channel.');
+}
+function toggleMute(){
+  vcMuted=!vcMuted;
+  if(localStream)localStream.getAudioTracks().forEach(function(t){t.enabled=!vcMuted;});
+  document.getElementById('vcMuteBtn').textContent=vcMuted?'🔇 UNMUTE':'🎙 MUTE';
+  var users=getVcUsers(),me=users.find(function(u){return u.name===getMyVcName();});
+  if(me){me.muted=vcMuted;saveVcUsers(users);renderVcBar(users);}
+}
+var vcPollInterval=null;
+function vcHeartbeat(){
+  if(!vcJoined)return;var users=getVcUsers(),now=Date.now();
+  var me=users.find(function(u){return u.name===getMyVcName();});
+  if(me)me.ts=now;else users.push({name:getMyVcName(),muted:vcMuted,ts:now});
+  users=users.filter(function(u){return now-u.ts<8000;});saveVcUsers(users);renderVcBar(users);
+}
+function renderVcBar(users){
+  var bar=document.getElementById('vcBar'),status=document.getElementById('vcStatus');
+  if(!bar)return;
+  var live=users.filter(function(u){return Date.now()-u.ts<8000;});
+  if(status)status.textContent=live.length?live.length+' in voice':'No one in voice';
+  if(!live.length){bar.innerHTML='<span style="font-size:10px;color:var(--dim);">Voice channel empty — join to appear here</span>';return;}
+  bar.innerHTML=live.map(function(u){return '<div class="vc-user'+(u.muted?' muted':' speaking')+'">'+(u.muted?'🔇':'🎙')+'&nbsp;'+escH(u.name)+'</div>';}).join('');
+}
+setInterval(function(){if(!vcJoined)renderVcBar(getVcUsers());},4000);
+
+/* ══════════════════════════════════════════════
+   HANGOUT GAME
+═══════════════════════════════════════════════ */
+var PLAYER_COLORS=['#00ff41','#00aaff','#ff3333','#cc44ff','#ffd700','#ff9900','#ff69b4','#00ffff'];
+var playerColorIdx=0;
+var hangoutPlayer={id:'p_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),name:'Anonymous',x:200+Math.random()*400,y:200+Math.random()*200,color:'#00ff41',dir:1,moving:false,ts:Date.now(),accessories:{mask:'none',outfit:'none',extra:'none'}};
+var hangoutKeys={},hangoutCanvas,hangoutCtx,currentRoom='lounge';
+
+var ROOMS={
+  lounge:{
+    name:'LOUNGE',bg:'#020402',
+    tiles:function(W,H,ctx){
+      /* Grid */
+      ctx.strokeStyle='#0a140a';ctx.lineWidth=1;
+      for(var x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+      for(var y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    },
+    objects:[
+      {type:'table',x:50,y:70,w:110,h:55,color:'#1a0d00',border:'#3d2200'},
+      {type:'table',x:640,y:70,w:110,h:55,color:'#1a0d00',border:'#3d2200'},
+      {type:'sofa',x:290,y:55,w:220,h:60,color:'#0a1a0a',border:'#003d0a'},
+      {type:'pc',x:800,y:30,w:60,h:70,color:'#001133',border:'#00aaff'},
+      {type:'pc',x:16,y:30,w:60,h:70,color:'#001133',border:'#00aaff'},
+      {type:'plant',x:22,y:22,w:28,h:55,color:'#002200',border:'#00aa00'},
+      {type:'plant',x:838,y:22,w:28,h:55,color:'#002200',border:'#00aa00'},
+    ]
+  },
+  fnaf:{
+    name:'FNAF PIZZERIA',bg:'#0d0d0d',
+    tiles:function(W,H,ctx){
+      /* Checkerboard */
+      var cs=40;
+      for(var row=0;row<Math.ceil(H/cs);row++){for(var col=0;col<Math.ceil(W/cs);col++){
+        ctx.fillStyle=(row+col)%2===0?'#111':'#0a0a0a';ctx.fillRect(col*cs,row*cs,cs,cs);
+      }}
+      /* Subtle grid */
+      ctx.strokeStyle='#1a1a1a';ctx.lineWidth=.5;
+      for(var x=0;x<W;x+=cs){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+      for(var y=0;y<H;y+=cs){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    },
+    objects:[
+      /* Stage area */
+      {type:'stage',x:30,y:30,w:200,h:100,color:'#1a0000',border:'#ff3333',label:'STAGE'},
+      /* Party tables */
+      {type:'ptable',x:320,y:50,w:100,h:50,color:'#f0f0f0',border:'#888',label:'TABLE'},
+      {type:'ptable',x:440,y:50,w:100,h:50,color:'#f0f0f0',border:'#888',label:'TABLE'},
+      {type:'ptable',x:560,y:50,w:100,h:50,color:'#f0f0f0',border:'#888',label:'TABLE'},
+      {type:'ptable',x:320,y:120,w:100,h:50,color:'#f0f0f0',border:'#888',label:'TABLE'},
+      {type:'ptable',x:440,y:120,w:100,h:50,color:'#f0f0f0',border:'#888',label:'TABLE'},
+      /* Curtain */
+      {type:'curtain',x:30,y:160,w:80,h:120,color:'#4a0066',border:'#7700aa',label:'PARTS'},
+      /* Prize counter */
+      {type:'counter',x:750,y:40,w:110,h:80,color:'#222',border:'#888',label:'PRIZES'},
+      /* Pirate cove */
+      {type:'cove',x:750,y:150,w:110,h:100,color:'#1a0000',border:'#884400',label:'PIRATE COVE'},
+    ]
+  }
+};
+
+function requireModToSwitch(name){
+  if(!currentUser||!currentUser.isMod){
+    toast('⛔ Only Unforgiven and mods can switch rooms.',true);
+    return;
+  }
+  switchRoom(name);
+  /* Broadcast room switch to all via localStorage */
+  try{localStorage.setItem('tbv5:room',JSON.stringify({room:name,by:currentUser.username,ts:Date.now()}));}catch(e){}
+}
+function switchRoom(name){
+  currentRoom=name;
+  ['lounge','fnaf'].forEach(function(r){var b=document.getElementById('roomBtn'+r.charAt(0).toUpperCase()+r.slice(1));if(b){b.style.borderColor=r===name?'var(--green)':'';b.style.color=r===name?'var(--green)':'var(--dim)';}});
+  /* Respawn to center */
+  hangoutPlayer.x=300+Math.random()*200;hangoutPlayer.y=250+Math.random()*100;
+}
+
+function initHangout(){
+  hangoutCanvas=document.getElementById('hangoutCanvas');if(!hangoutCanvas)return;
+  hangoutCtx=hangoutCanvas.getContext('2d');
+  hangoutCanvas.width=900;hangoutCanvas.height=520;
+  if(currentUser){hangoutPlayer.name=currentUser.username;if(currentUser.accessories)hangoutPlayer.accessories=currentUser.accessories;}
+  document.getElementById('hangoutUsername').textContent=hangoutPlayer.name;
+  document.addEventListener('keydown',function(e){var tag=(document.activeElement&&document.activeElement.tagName)||'';var inInput=tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT';hangoutKeys[e.key]=!inInput&&e.key!=='Enter';if(!inInput&&['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault();if(e.key==='F11'){e.preventDefault();toggleMiniChat();}});
+  document.addEventListener('keyup',function(e){hangoutKeys[e.key]=false;});
+  hangoutLoop();setInterval(syncHangout,600);setInterval(renderHangoutChat,1200);setInterval(function(){renderVcBar(getVcUsers());},3000);
+}
+function hangoutLoop(){updateHangoutPlayer();drawHangout();requestAnimationFrame(hangoutLoop);}
+var SPEED=2.4;
+function updateHangoutPlayer(){
+  var moved=false;
+  if(hangoutKeys['ArrowLeft']||hangoutKeys['a']||hangoutKeys['A']){hangoutPlayer.x-=SPEED;hangoutPlayer.dir=-1;moved=true;}
+  if(hangoutKeys['ArrowRight']||hangoutKeys['d']||hangoutKeys['D']){hangoutPlayer.x+=SPEED;hangoutPlayer.dir=1;moved=true;}
+  if(hangoutKeys['ArrowUp']||hangoutKeys['w']||hangoutKeys['W']){hangoutPlayer.y-=SPEED;moved=true;}
+  if(hangoutKeys['ArrowDown']||hangoutKeys['s']||hangoutKeys['S']){hangoutPlayer.y+=SPEED;moved=true;}
+  hangoutPlayer.x=Math.max(20,Math.min(880,hangoutPlayer.x));hangoutPlayer.y=Math.max(20,Math.min(500,hangoutPlayer.y));
+  hangoutPlayer.moving=moved;hangoutPlayer.ts=Date.now();
+}
+function drawHangout(){
+  var ctx=hangoutCtx,W=hangoutCanvas.width,H=hangoutCanvas.height;
+  var room=ROOMS[currentRoom]||ROOMS.lounge;
+  ctx.fillStyle=room.bg;ctx.fillRect(0,0,W,H);
+  room.tiles(W,H,ctx);
+  /* Objects */
+  room.objects.forEach(function(obj){
+    ctx.fillStyle=obj.color;ctx.fillRect(obj.x,obj.y,obj.w,obj.h);
+    ctx.strokeStyle=obj.border;ctx.lineWidth=1.5;ctx.strokeRect(obj.x,obj.y,obj.w,obj.h);
+    if(obj.label){ctx.fillStyle=obj.border;ctx.font='8px monospace';ctx.textAlign='center';ctx.fillText(obj.label,obj.x+obj.w/2,obj.y+obj.h/2+3);}
+    /* Party table decorations */
+    if(obj.type==='ptable'){
+      var cols=['#cc44ff','#ff3333','#ffd700','#00aaff'];
+      for(var i=0;i<6;i++){ctx.fillStyle=cols[i%cols.length];ctx.beginPath();ctx.moveTo(obj.x+12+i*14,obj.y+5);ctx.lineTo(obj.x+7+i*14,obj.y+20);ctx.lineTo(obj.x+17+i*14,obj.y+20);ctx.closePath();ctx.fill();}
+    }
+    /* Curtain stripes */
+    if(obj.type==='curtain'){for(var j=0;j<5;j++){ctx.fillStyle='rgba(180,0,255,0.3)';ctx.fillRect(obj.x+j*16,obj.y,8,obj.h);}}
+    /* PC screen */
+    if(obj.type==='pc'){ctx.fillStyle='#003a66';ctx.fillRect(obj.x+5,obj.y+5,obj.w-10,obj.h-20);ctx.fillStyle='#00aaff';ctx.font='7px monospace';ctx.textAlign='center';ctx.fillText('>_',obj.x+obj.w/2,obj.y+obj.h/2);}
+  });
+  /* Room title */
+  ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(W/2-110,6,220,22);
+  ctx.strokeStyle='var(--green)';ctx.lineWidth=1;ctx.strokeRect(W/2-110,6,220,22);
+  ctx.fillStyle='#00ff41';ctx.font='bold 11px monospace';ctx.textAlign='center';ctx.fillText(room.name,W/2,21);
+  /* Border */
+  ctx.strokeStyle='#00ff41';ctx.lineWidth=2;ctx.strokeRect(1,1,W-2,H-2);
+  /* Players */
+  var others=getOtherPlayers();
+  others.forEach(function(p){drawPlayer(ctx,p,false);});
+  drawPlayer(ctx,hangoutPlayer,true);
+  /* Player count */
+  var cnt=document.getElementById('hangoutPlayerCount');if(cnt)cnt.textContent=(others.length+1)+' player'+(others.length===0?'':'s');
+}
+function drawPlayer(ctx,p,isMe){
+  var x=p.x,y=p.y,col=p.color||'#00ff41',bob=isMe&&p.moving?Math.sin(Date.now()/100)*2:0;
+  var accs=p.accessories||{mask:'none',outfit:'none',extra:'none'};
+  /* Shadow */
+  ctx.fillStyle='rgba(0,0,0,.35)';ctx.beginPath();ctx.ellipse(x,y+21+bob,13,4,0,0,Math.PI*2);ctx.fill();
+  /* Outfit */
+  var outfitColors={hoodie:'#111',suit:'#222',cloak:'#1a0033',vest:'#333'};
+  ctx.fillStyle=outfitColors[accs.outfit]||col;
+  ctx.beginPath();if(ctx.roundRect)ctx.roundRect(x-10,y-18+bob,20,22,3);else ctx.rect(x-10,y-18+bob,20,22);ctx.fill();
+  ctx.strokeStyle=col;ctx.lineWidth=1;ctx.stroke();
+  /* Head */
+  ctx.fillStyle='#111';ctx.beginPath();ctx.arc(x,y-22+bob,12,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.stroke();
+  /* Mask */
+  if(accs.mask==='hacker'){/* Pixelated hacker mask */
+    ctx.fillStyle='rgba(0,255,65,.2)';ctx.fillRect(x-9,y-30+bob,18,14);
+    ctx.strokeStyle='#00ff41';ctx.lineWidth=1;ctx.strokeRect(x-9,y-30+bob,18,14);
+    ctx.fillStyle='#00ff41';ctx.fillRect(x-7,y-28+bob,5,4);ctx.fillRect(x+2,y-28+bob,5,4);
+    ctx.fillRect(x-5,y-22+bob,10,2);
+  }else if(accs.mask==='skull'){
+    ctx.fillStyle='#eee';ctx.font='16px serif';ctx.textAlign='center';ctx.fillText('💀',x,y-16+bob);
+  }else if(accs.mask==='anonymous'){
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.ellipse(x,y-22+bob,9,11,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(x-3.5,y-24+bob,2,2.5,0,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.ellipse(x+3.5,y-24+bob,2,2.5,0,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#333';ctx.lineWidth=1;ctx.beginPath();ctx.arc(x,y-19+bob,4,0.1,Math.PI-.1);ctx.stroke();
+  }else if(accs.mask==='gas'){
+    ctx.fillStyle='#333';ctx.beginPath();ctx.ellipse(x,y-21+bob,10,12,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#555';ctx.beginPath();ctx.ellipse(x-4,y-22+bob,3,3,0,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.ellipse(x+4,y-22+bob,3,3,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#666';ctx.fillRect(x-3,y-17+bob,6,4);
+  }else if(accs.mask==='ninja'){
+    ctx.fillStyle='#000';ctx.fillRect(x-10,y-27+bob,20,8);
+    ctx.fillStyle=col;ctx.beginPath();ctx.ellipse(x-3,y-24+bob,2,2,0,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.ellipse(x+3,y-24+bob,2,2,0,0,Math.PI*2);ctx.fill();
+  }else{
+    ctx.fillStyle=col;ctx.beginPath();ctx.ellipse(x-3.5,y-24+bob,2.5,3,-0.2,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.ellipse(x+3.5,y-24+bob,2.5,3,0.2,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=col;ctx.lineWidth=1;ctx.beginPath();ctx.arc(x,y-19+bob,4,0.2,Math.PI-.2);ctx.stroke();
+  }
+  /* Extra accessory */
+  if(accs.extra!=='none'){var extraEmoji={laptop:'💻',katana:'⚔️',headset:'🎧',coffee:'☕'}[accs.extra];if(extraEmoji){ctx.font='11px serif';ctx.textAlign='center';ctx.fillText(extraEmoji,x+14,y-16+bob);}}
+  /* Name tag */
+  ctx.font=isMe?'bold 9px monospace':'8px monospace';ctx.fillStyle=isMe?col:'rgba(180,255,180,.7)';ctx.textAlign='center';
+  var label=p.name.length>12?p.name.slice(0,11)+'…':p.name;
+  ctx.fillText(label,x,y-37+bob);
+  if(isMe){ctx.fillStyle=col;ctx.fillText('▼',x,y-47+bob);}
+}
+function getOtherPlayers(){
+  var all=getHangoutPlayers(),now=Date.now();
+  return all.filter(function(p){return p.id!==hangoutPlayer.id&&now-p.ts<4000&&p.room===currentRoom;});
+}
+function syncHangout(){
+  try{
+    var all=getHangoutPlayers();var now=Date.now();
+    var idx=all.findIndex(function(p){return p.id===hangoutPlayer.id;});
+    var data={id:hangoutPlayer.id,name:hangoutPlayer.name,x:Math.round(hangoutPlayer.x),y:Math.round(hangoutPlayer.y),color:hangoutPlayer.color,dir:hangoutPlayer.dir,ts:now,accessories:hangoutPlayer.accessories||{},room:currentRoom};
+    if(idx>=0)all[idx]=data;else all.push(data);
+    all=all.filter(function(p){return now-p.ts<8000;});
+    saveHangoutPlayers(all);
+  }catch(e){}
+}
+
+/* ── HANGOUT CHAT ── */
+function sendHangoutMsg(isMini){
+  var inp=document.getElementById(isMini?'miniChatIn':'hangoutChatInput');
+  var msg=(inp&&inp.value||'').trim();if(!msg)return;inp.value='';
+  /* Check for mod commands */
+  if(msg.toLowerCase()==='!fnaf'){
+    if(!currentUser||!currentUser.isMod){
+      addSystemMsg('⛔ Only Unforgiven can switch to the FNAF map.');return;
+    }
+    switchRoom('fnaf');
+    addSystemMsg('🍕 FNAF Pizzeria activated by '+currentUser.username+'!');
+    /* Save room switch as a system message visible to all */
+    var sysEntry={name:'SYSTEM',text:'🍕 '+currentUser.username+' switched the room to FNAF PIZZERIA!',ts:Date.now(),color:'#ffd700',room:currentRoom,isSystem:true};
+    var msgs=getChatMsgs();msgs.push(sysEntry);if(msgs.length>100)msgs=msgs.slice(-100);saveChatMsgs(msgs);
+    renderHangoutChat();return;
+  }
+  if(msg.toLowerCase()==='!lounge'){
+    if(!currentUser||!currentUser.isMod){
+      addSystemMsg('⛔ Only mods can switch rooms.');return;
+    }
+    switchRoom('lounge');
+    var sysEntry={name:'SYSTEM',text:'🛋️ '+currentUser.username+' switched the room to LOUNGE.',ts:Date.now(),color:'#00ff41',room:currentRoom,isSystem:true};
+    var msgs=getChatMsgs();msgs.push(sysEntry);if(msgs.length>100)msgs=msgs.slice(-100);saveChatMsgs(msgs);
+    renderHangoutChat();return;
+  }
+  var entry={name:hangoutPlayer.name,text:msg,ts:Date.now(),color:hangoutPlayer.color,room:currentRoom};
+  var msgs=getChatMsgs();msgs.push(entry);if(msgs.length>100)msgs=msgs.slice(-100);saveChatMsgs(msgs);
+  renderHangoutChat();
+}
+
+function addSystemMsg(text){
+  /* Local-only system message (not stored) */
+  var el=document.getElementById('hangoutChat');
+  if(el){
+    var d=document.createElement('div');
+    d.className='hangout-msg';
+    d.innerHTML='<span style="color:var(--gold)">⚡ SYSTEM</span>: <span style="color:var(--dim)">'+escH(text)+'</span>';
+    el.appendChild(d);el.scrollTop=el.scrollHeight;
+  }
+}
+
+function renderHangoutChat(){
+  var msgs=getChatMsgs().filter(function(m){return Date.now()-m.ts<600000&&m.room===currentRoom;}).slice(-20);
+  ['hangoutChat','miniChatMsgs'].forEach(function(id){
+    var el=document.getElementById(id);if(!el)return;
+    el.innerHTML=msgs.map(function(m){return '<div class="hangout-msg"><span class="hangout-msg-user" style="color:'+(m.color||'var(--green)')+'">'+escH(m.name)+'</span>: <span class="hangout-msg-text">'+escH(m.text)+'</span></div>';}).join('');
+    el.scrollTop=el.scrollHeight;
+  });
+}
+function toggleMiniChat(){var mc=document.getElementById('miniChat');if(mc)mc.classList.toggle('show');}
+function changeHangoutName(){var n=prompt('Enter hangout name (max 16):');if(n&&n.trim()){hangoutPlayer.name=n.trim().slice(0,16);document.getElementById('hangoutUsername').textContent=hangoutPlayer.name;toast('Name: '+hangoutPlayer.name);}}
+function cyclePlayerColor(){playerColorIdx=(playerColorIdx+1)%PLAYER_COLORS.length;hangoutPlayer.color=PLAYER_COLORS[playerColorIdx];toast('Colour changed!');}
+
+/* F11 global */
+document.addEventListener('keydown',function(e){if(e.key==='F11'){e.preventDefault();toggleMiniChat();}});
+
+/* Cleanup */
+window.addEventListener('beforeunload',function(){
+  try{saveHangoutPlayers(getHangoutPlayers().filter(function(p){return p.id!==hangoutPlayer.id;}));}catch(e){}
+  if(vcJoined)leaveVoice();
+});
+
+/* ══════════════════════════════════════════════
+   DISCORD LOOKUP
+═══════════════════════════════════════════════ */
+var BADGE_FLAGS={1:{name:'Staff',icon:'🛡'},2:{name:'Partner',icon:'🤝'},4:{name:'HypeSquad',icon:'🎪'},8:{name:'Bug Hunter',icon:'🐛'},64:{name:'Bravery',icon:'⚡'},128:{name:'Brilliance',icon:'💫'},256:{name:'Balance',icon:'⚖'},512:{name:'Early Supporter',icon:'⭐'},16384:{name:'Bug Hunter L2',icon:'🐛'},131072:{name:'Verified Dev',icon:'💻'},4194304:{name:'Active Dev',icon:'🎉'}};
+function getFlags(bits){var out=[];if(!bits)return out;Object.keys(BADGE_FLAGS).forEach(function(k){if(bits&parseInt(k))out.push(BADGE_FLAGS[k]);});return out;}
+function snowflakeToDate(id){try{return new Date(Number(BigInt(id)>>22n)+1420070400000);}catch(e){return new Date(Math.floor(parseInt(id)/4194304)+1420070400000);}}
+function fmtDate(d){var mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],pad=function(n){return String(n).padStart(2,'0');};return mo[d.getUTCMonth()]+' '+d.getUTCDate()+', '+d.getUTCFullYear()+' '+pad(d.getUTCHours())+':'+pad(d.getUTCMinutes())+' UTC';}
+function buildAvatar(id,hash,size){if(!hash){try{return 'https://cdn.discordapp.com/embed/avatars/'+Number(BigInt(id)%6n)+'.png';}catch(e){return 'https://cdn.discordapp.com/embed/avatars/0.png';}}return 'https://cdn.discordapp.com/avatars/'+id+'/'+hash+'.'+(hash.startsWith('a_')?'gif':'png')+'?size='+(size||256);}
+function buildBanner(id,hash){if(!hash)return null;return 'https://cdn.discordapp.com/banners/'+id+'/'+hash+'.'+(hash.startsWith('a_')?'gif':'png')+'?size=600';}
+function fetchT(url,ms){return new Promise(function(res,rej){var done=false;var t=setTimeout(function(){if(!done){done=true;rej(new Error('timeout'));}},ms||8000);fetch(url,{headers:{Accept:'application/json'}}).then(function(r){if(!done){done=true;clearTimeout(t);res(r);}}).catch(function(e){if(!done){done=true;clearTimeout(t);rej(e);}});});}
+function normalise(raw,id){if(!raw||typeof raw!=='object')return null;var d=(raw.data&&typeof raw.data==='object')?raw.data:raw;if(d.message||d.error||(d.code&&!d.id))return null;if(!d.id&&!d.username&&!d.global_name&&!d.avatarURL)return null;var avHash=null,avLink=null;if(d.avatarURL&&typeof d.avatarURL==='string')avLink=d.avatarURL.split('?')[0]+'?size=256';else if(d.avatar&&typeof d.avatar==='object'){avHash=d.avatar.id||null;avLink=d.avatar.link||null;}else if(typeof d.avatar==='string'&&d.avatar)avHash=d.avatar;var bnHash=null,bnLink=null,bnColor=null;if(d.banner&&typeof d.banner==='object'){bnHash=d.banner.id||null;bnLink=d.banner.link||null;bnColor=d.banner.color||null;}else if(typeof d.banner==='string'&&d.banner)bnHash=d.banner;if(!bnColor){if(d.banner_color&&typeof d.banner_color==='string')bnColor=d.banner_color;else if(d.accent_color&&typeof d.accent_color==='number')bnColor='#'+('000000'+d.accent_color.toString(16)).slice(-6);}var flags=0;if(typeof d.public_flags==='number')flags=d.public_flags;else if(typeof d.flags==='number')flags=d.flags;return{id:d.id||id,username:d.username||d.tag||'',global_name:d.global_name||d.globalName||d.display_name||d.username||'Unknown',avHash:avHash,avLink:avLink,bnHash:bnHash,bnLink:bnLink,bnColor:bnColor,public_flags:flags,bot:!!d.bot};}
+var dCurrentData=null;
+async function lookupDiscordId(){
+  var id=(document.getElementById('dcInput').value||'').trim();if(!id){toast('Enter a Discord User ID',true);return;}if(!/^\d{15,21}$/.test(id)){toast('Invalid — 15-21 digit Snowflake',true);return;}
+  document.getElementById('dcResult').style.display='none';document.getElementById('dcLoading').style.display='block';
+  dCurrentData=null;var created=snowflakeToDate(id);var data=null,lastErr='all APIs failed';
+  var apis=['https://japi.rest/discord/v1/user/'+id,'https://discordlookup.mesalytic.moe/v1/user/'+id];
+  for(var i=0;i<apis.length&&!data;i++){try{var r=await fetchT(apis[i],7000);if(!r.ok){lastErr='HTTP '+r.status;continue;}var txt=await r.text();var j;try{j=JSON.parse(txt);}catch(e){continue;}var p=normalise(j,id);if(p){data=p;break;}lastErr='no valid data';}catch(e){lastErr=e.message;}}
+  document.getElementById('dcLoading').style.display='none';
+  if(!data){renderSnowflakeOnly(id,created,lastErr);return;}renderFull(data,id,created);
+}
+function si(eid,text,color){var el=document.getElementById(eid);if(!el)return;el.textContent=text;if(color)el.style.color=color;}
+function renderSnowflakeOnly(id,created,errMsg){si('dci-id',id);si('dci-created',created?fmtDate(created):'Unknown','var(--green)');si('dci-type','Unknown');si('dci-bc','None');si('dci-av','Unknown');si('dci-bn','Unknown');si('dci-bot','Unknown');si('dci-fl','Unknown');document.getElementById('dcGN').textContent='User '+id;document.getElementById('dcUN').textContent='';document.getElementById('dcID').textContent='ID: '+id+' — click to copy';document.getElementById('dcID').dataset.uid=id;document.getElementById('dcAv').style.display='none';document.getElementById('dcAvPH').style.display='flex';document.getElementById('dcBadges').innerHTML='';var note=document.getElementById('dcNote');if(note){note.style.display='block';note.textContent='API unavailable ('+errMsg+'). Snowflake date only.';}document.getElementById('dcResult').style.display='block';}
+function renderFull(d,id,created){dCurrentData=d;var aUrl=d.avLink||buildAvatar(id,d.avHash,256);var aImg=document.getElementById('dcAv'),aPH=document.getElementById('dcAvPH');aImg.onerror=function(){aImg.style.display='none';aPH.style.display='flex';};aImg.onload=function(){aImg.style.display='block';aPH.style.display='none';};aImg.src=aUrl;document.getElementById('avModalImg').src=d.avLink?d.avLink.replace(/size=\d+/,'size=512'):buildAvatar(id,d.avHash,512);var bUrl=d.bnLink||buildBanner(id,d.bnHash);var bannerDiv=document.getElementById('dcBanner'),bannerEl=document.getElementById('dcBannerImg');if(bUrl){bannerEl.innerHTML='<img src="'+bUrl+'" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0" onerror="this.style.display=\'none\'">';bannerEl.style.display='block';si('dci-bn','Available','var(--green)');}else{bannerEl.style.display='none';bannerEl.innerHTML='';if(d.bnColor)bannerDiv.style.background='linear-gradient(135deg,'+d.bnColor+'bb,#0a0e1a)';si('dci-bn','None');}document.getElementById('dcGN').textContent=d.global_name||d.username||'Unknown';document.getElementById('dcUN').textContent=d.username?'@'+d.username:'';document.getElementById('dcID').textContent='ID: '+id+' — click to copy';document.getElementById('dcID').dataset.uid=id;si('dci-id',id);si('dci-created',fmtDate(created||snowflakeToDate(id)),'var(--green)');si('dci-type',d.bot?'Bot':'User',d.bot?'var(--blue)':'var(--text)');si('dci-bot',d.bot?'Yes':'No');si('dci-av',d.avHash||d.avLink?'Available':'Default',d.avHash||d.avLink?'var(--green)':'var(--dim)');var bcEl=document.getElementById('dci-bc');if(bcEl){if(d.bnColor){bcEl.innerHTML='<span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:'+d.bnColor+';margin-right:3px;vertical-align:middle;border:1px solid rgba(255,255,255,.2)"></span>'+d.bnColor;bcEl.style.color='#fff';}else bcEl.textContent='None';}var flags=getFlags(d.public_flags);var bEl=document.getElementById('dcBadges');if(flags.length){bEl.innerHTML=flags.map(function(f){return '<span style="background:rgba(88,101,242,.12);border:1px solid rgba(88,101,242,.3);color:#7289da;font-size:9px;padding:2px 7px;letter-spacing:1px">'+f.icon+' '+f.name+'</span>';}).join('');si('dci-fl',flags.map(function(f){return f.name;}).join(', '),'#7289da');}else{bEl.innerHTML='<span style="font-size:10px;color:var(--dim)">No public badges</span>';si('dci-fl','None');}var note=document.getElementById('dcNote');if(note)note.style.display='none';document.getElementById('dcResult').style.display='block';}
+function copyDiscordId(){var el=document.getElementById('dcID'),uid=el&&el.dataset&&el.dataset.uid;if(uid)navigator.clipboard.writeText(uid).then(function(){toast('ID copied!');});}
+function copyDiscordData(){if(!dCurrentData)return;var id=(document.getElementById('dcInput').value||'').trim();var d=dCurrentData,created=snowflakeToDate(id);var flags=getFlags(d.public_flags).map(function(f){return f.name;}).join(', ')||'None';var out=['=== DISCORD LOOKUP ===','ID: '+id,'Username: @'+(d.username||'N/A'),'Display: '+(d.global_name||'N/A'),'Created: '+(created?fmtDate(created):'N/A'),'Bot: '+(d.bot?'Yes':'No'),'Badges: '+flags].join('\n');navigator.clipboard.writeText(out).then(function(){toast('Data copied!');});}
+function enlargeAvatar(){var img=document.getElementById('avModalImg');if(img&&img.src&&img.src.length>10)openModal('avModal');}
+
+/* ══════════════════════════════════════════════
+   SLITHER MODS
+═══════════════════════════════════════════════ */
+var modCfg={zoom:1.6,glow:18,skin:'#00ff41'};var activeMods={};
+var MOD_LIST=[{id:'zoomOut',name:'ZOOM OUT',desc:'See more of the map'},{id:'darkMap',name:'DARK MAP',desc:'Black background'},{id:'nightVision',name:'NIGHT VISION',desc:'Brightness boost'},{id:'glowTrail',name:'GLOW TRAIL',desc:'Neon glow on snake'},{id:'fpsCounter',name:'FPS COUNTER',desc:'Live FPS display'},{id:'scoreHud',name:'SCORE HUD',desc:'Score on screen'},{id:'minimap',name:'MINIMAP',desc:'Radar in corner'},{id:'wallAlert',name:'WALL ALERT',desc:'Warning near edge'},{id:'orbMagnet',name:'ORB MAGNET',desc:'Auto-steer to food'},{id:'autoBoost',name:'AUTO BOOST',desc:'Constant boost'},{id:'antiDeath',name:'ANTI DEATH',desc:'Flee nearby snakes'},{id:'massDisplay',name:'MASS DISPLAY',desc:'Mass counter'},{id:'highVisSkin',name:'CUSTOM SKIN',desc:'Apply skin colour'},{id:'speedBoost',name:'SPEED BOOST',desc:'Instant max speed'}];
+function buildModGrid(){var el=document.getElementById('modGrid');if(!el)return;el.innerHTML=MOD_LIST.map(function(m){return '<div class="mod-card'+(activeMods[m.id]?' active':'')+'" id="mb-'+m.id+'" onclick="toggleMod(\''+m.id+'\')" ><div class="mod-card-dot"></div><div class="mod-card-name">'+m.name+'</div><div class="mod-card-desc">'+m.desc+'</div></div>';}).join('');}
+function toggleMod(mod){if(activeMods[mod])delete activeMods[mod];else activeMods[mod]=true;buildModGrid();var keys=Object.keys(activeMods);var el=document.getElementById('activeBadges');if(el)el.textContent=keys.length?keys.join(', '):'None active';}
+function clearMods(){activeMods={};buildModGrid();var el=document.getElementById('activeBadges');if(el)el.textContent='None active';}
+function enableAllMods(){MOD_LIST.forEach(function(m){activeMods[m.id]=true;});buildModGrid();var el=document.getElementById('activeBadges');if(el)el.textContent=MOD_LIST.map(function(m){return m.id;}).join(', ');toast('All mods enabled!');}
+function setSkinColor(col,el){modCfg.skin=col;document.querySelectorAll('#page-gamemods .theme-swatch').forEach(function(s){s.classList.remove('active');});if(el)el.classList.add('active');}
+function getScript(mod,cfg){var SKIN=JSON.stringify(cfg.skin||'#00ff41');var scripts={zoomOut:'(function(){var z='+cfg.zoom+';var oc=CanvasRenderingContext2D.prototype.scale;CanvasRenderingContext2D.prototype.scale=function(a,b){oc.call(this,a*z,b*z);};})();',darkMap:'(function(){var of=CanvasRenderingContext2D.prototype.fillRect;CanvasRenderingContext2D.prototype.fillRect=function(x,y,w,h){var old=this.fillStyle;if(old==="#b2d234"||old==="#b2d234ff"){this.fillStyle="#111";}of.call(this,x,y,w,h);this.fillStyle=old;};})();',nightVision:'(function(){document.body.style.filter="brightness(1.4) contrast(1.1)";})();',glowTrail:'(function(){var os=CanvasRenderingContext2D.prototype.stroke;CanvasRenderingContext2D.prototype.stroke=function(){this.shadowBlur='+cfg.glow+';this.shadowColor='+SKIN+';os.call(this);};})();',highVisSkin:'(function(){window.__skinColor='+SKIN+';})();',fpsCounter:'(function(){var f=0,t=Date.now(),d=document.createElement("div");d.style="position:fixed;top:8px;right:8px;background:rgba(0,0,0,.75);color:#0f0;font:11px monospace;padding:4px 8px;z-index:9999";document.body.appendChild(d);function fr(){f++;if(Date.now()-t>=1000){d.textContent=f+" FPS";f=0;t=Date.now();}requestAnimationFrame(fr);}fr();})();',scoreHud:'(function(){var d=document.createElement("div");d.style="position:fixed;top:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.75);color:#0f0;font:bold 14px monospace;padding:5px 14px;z-index:9999";document.body.appendChild(d);setInterval(function(){if(window.snake)d.textContent="Score: "+(window.snake.sc||0);},500);})();',minimap:'(function(){var c=document.createElement("canvas");c.width=c.height=160;c.style="position:fixed;bottom:10px;right:10px;border:1px solid #0f0;background:rgba(0,0,0,.6);z-index:9999";document.body.appendChild(c);var cx=c.getContext("2d");setInterval(function(){cx.clearRect(0,0,160,160);if(!window.snake)return;var grd=window.grd||21000,sc=80/grd;if(window.foods)window.foods.forEach(function(f){cx.beginPath();cx.arc((f.xx||f.x)*sc+80,(f.yy||f.y)*sc+80,2,0,Math.PI*2);cx.fillStyle="#ff0";cx.fill();});cx.beginPath();cx.arc(window.snake.xx*sc+80,window.snake.yy*sc+80,5,0,Math.PI*2);cx.fillStyle="#0f0";cx.fill();},100);})();',speedBoost:'(function(){window.setAcceleration(Infinity);})();',autoBoost:'(function(){setInterval(function(){if(window.snake)window.setAcceleration(Infinity);},200);})();',antiDeath:'(function(){setInterval(function(){if(window.snake&&window.snakes){var sx=window.snake.xx,sy=window.snake.yy;window.snakes.forEach(function(s){if(s.pts)s.pts.forEach(function(p){if(Math.hypot(p.xx-sx,p.yy-sy)<50){window.xm=-((p.xx-sx)/Math.max(1,Math.abs(p.xx-sx)));window.ym=-((p.yy-sy)/Math.max(1,Math.abs(p.yy-sy)));}});});}},50);})();',wallAlert:'(function(){var d=document.createElement("div");d.style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font:bold 28px monospace;color:red;z-index:9999;display:none;text-shadow:0 0 10px red";d.textContent="\u26a0 WALL!";document.body.appendChild(d);setInterval(function(){if(window.snake&&window.grd){var r=window.grd;d.style.display=(Math.hypot(window.snake.xx,window.snake.yy)>r*0.88)?"block":"none";}},100);})();',orbMagnet:'(function(){setInterval(function(){if(window.snake&&window.foods&&window.foods.length){var sx=window.snake.xx,sy=window.snake.yy,best=null,bd=Infinity;window.foods.forEach(function(f){var d=Math.hypot((f.xx||f.x)-sx,(f.yy||f.y)-sy);if(d<bd){bd=d;best=f;}});if(best&&bd<600){window.xm=((best.xx||best.x)-sx)/Math.max(1,bd);window.ym=((best.yy||best.y)-sy)/Math.max(1,bd);}}},80);})();',massDisplay:'(function(){var d=document.createElement("div");d.style="position:fixed;bottom:40px;left:10px;background:rgba(0,0,0,.7);color:#0f0;font:12px monospace;padding:4px 10px;z-index:9999";document.body.appendChild(d);setInterval(function(){d.textContent="Mass: "+(window.snake?Math.round(window.snake.sc||0):"--");},500);})();'};return scripts[mod]||'// mod not found';}
+function copyScript(){var mods=Object.keys(activeMods);if(!mods.length){toast('No mods selected!',true);return;}navigator.clipboard.writeText('(function(){\n'+mods.map(function(m){return getScript(m,modCfg);}).join('\n')+'\n})();').then(function(){toast('Script copied! Paste in F12 console on slither.io');}).catch(function(){toast('Copy failed',true);});}
+
+/* Slither mods sub-page functions */
+var activeMods2={};
+function buildModGrid2(){
+  var el=document.getElementById('modGrid2');if(!el)return;
+  el.innerHTML='';
+  MOD_LIST.forEach(function(m){
+    var card=document.createElement('div');
+    card.className='mod-card'+(activeMods2[m.id]?' active':'');
+    card.innerHTML='<div class="mod-card-dot"></div><div class="mod-card-name">'+m.name+'</div><div class="mod-card-desc">'+m.desc+'</div>';
+    (function(id){card.addEventListener('click',function(){toggleMod2(id);});})(m.id);
+    el.appendChild(card);
+  });
+  var ab=document.getElementById('activeBadges2');
+  if(ab){var keys=Object.keys(activeMods2);ab.textContent=keys.length?keys.join(', '):'None active';}
+}
+function toggleMod2(mod){
+  if(activeMods2[mod])delete activeMods2[mod];else activeMods2[mod]=true;
+  buildModGrid2();
+}
+function clearMods2(){activeMods2={};buildModGrid2();}
+function enableAllMods2(){MOD_LIST.forEach(function(m){activeMods2[m.id]=true;});buildModGrid2();toast('All mods enabled!');}
+function copyScriptFromPage(){
+  var mods=Object.keys(activeMods2);if(!mods.length){toast('No mods selected!',true);return;}
+  navigator.clipboard.writeText('(function(){\n'+mods.map(function(m){return getScript(m,modCfg);}).join('\n')+'\n})();')
+    .then(function(){toast('✓ Script copied! Open slither.io → F12 → Console → Paste → Enter');})
+    .catch(function(){toast('Copy failed',true);});
+}
+
+function copyBotScript(){
+  var aggro=document.getElementById('botAggro')&&document.getElementById('botAggro').checked;
+  var survive=document.getElementById('botSurvive')&&document.getElementById('botSurvive').checked;
+  var food=document.getElementById('botFood')&&document.getElementById('botFood').checked;
+  var boost=document.getElementById('botBoost')&&document.getElementById('botBoost').checked;
+  var speed=document.getElementById('botSpeed')&&parseInt(document.getElementById('botSpeed').value)||60;
+  var bot='(function(){'+
+    'var _bot=setInterval(function(){'+
+    'if(!window.snake)return;'+
+    'var sx=window.snake.xx,sy=window.snake.yy;'+
+    (food?'if(window.foods&&window.foods.length){var best=null,bd=Infinity;window.foods.forEach(function(f){var d=Math.hypot((f.xx||f.x)-sx,(f.yy||f.y)-sy);if(d<bd){bd=d;best=f;}});if(best&&bd<800){window.xm=((best.xx||best.x)-sx)/Math.max(1,bd);window.ym=((best.yy||best.y)-sy)/Math.max(1,bd);}}':'') +
+    (survive?'if(window.snakes){window.snakes.forEach(function(s){if(s.pts)s.pts.forEach(function(p){if(Math.hypot(p.xx-sx,p.yy-sy)<60){window.xm=-((p.xx-sx)/Math.max(1,Math.abs(p.xx-sx)));window.ym=-((p.yy-sy)/Math.max(1,Math.abs(p.yy-sy)));}}); });}':'') +
+    (boost?'if(window.snakes){var close=false;window.snakes.forEach(function(s){if(s.pts&&s.pts.length&&Math.hypot(s.pts[0].xx-sx,s.pts[0].yy-sy)<200)close=true;});window.setAcceleration(close?0:Infinity);}':'') +
+    '},'+speed+');'+
+    'console.log("[BOT] Slither.io bot active | Speed: '+speed+'ms");'+
+    '})();';
+  navigator.clipboard.writeText(bot).then(function(){toast('✓ Bot script copied!');}).catch(function(){toast('Copy failed',true);});
+}
+
+
+/* ══════════════════════════════════════════════
+   GAME MODS GRID (with trailers)
+═══════════════════════════════════════════════ */
+var GAME_MODS=[
+  {name:'MINECRAFT',sub:'TLauncher Compatible',color:'#5d9f3c',pct:98,status:'DONE',yt:'https://www.youtube.com/embed/MmB9b5njVbA'},
+  {name:'COMBAT MASTER',sub:'Mobile FPS',color:'#ff3333',pct:78,status:'DONE',yt:'https://www.youtube.com/embed/j-TmvFMHNi0'},
+  {name:'VRCHAT',sub:'Social 3D Platform',color:'#aa44ff',pct:15,status:'DONE',yt:'https://www.youtube.com/embed/WpbGNW62NCI'},
+  {name:'GTA V',sub:'Rockstar Open World',color:'#ff7700',pct:0,status:'NOT STARTED',yt:'https://www.youtube.com/embed/QkkoHAzjnUs'},
+  {name:'RED DEAD 2',sub:'Rockstar Western',color:'#884400',pct:0,status:'NOT STARTED',yt:'https://www.youtube.com/embed/9H879ykFEw0'},
+  {name:'SLITHER.IO',sub:'Browser IO Game',color:'#00ff41',pct:100,status:'DONE',yt:'https://www.youtube.com/embed/dQw4w9WgXcQ',modPage:'slithermods'},
+  {name:'AGAR.IO',sub:'Cell IO Game',color:'#0088ff',pct:28,status:'DONE',yt:'https://www.youtube.com/embed/0MaAohlzHng'},
+  {name:'DIEP.IO',sub:'Tank IO Game',color:'#ff9900',pct:19,status:'DONE',yt:'https://www.youtube.com/embed/J7UwSVsiwzI'},
+];
+function buildGameModGrid(){
+  var el=document.getElementById('gmodGrid');if(!el)return;
+  el.innerHTML='';
+  GAME_MODS.forEach(function(g){
+    var pctColor=g.pct>=75?'#00ff41':g.pct>=40?'#ffaa00':'#ff3333';
+    var badgeBg=g.status==='NOT STARTED'?'#330000':g.pct>=75?'#003a0a':'#1a1000';
+    var badgeColor=g.status==='NOT STARTED'?'#ff3333':g.pct>=75?'#00ff41':'#ffaa00';
+    var isClickable=!!g.modPage;
+    var card=document.createElement('div');
+    card.className='gmod-card';
+    if(isClickable){card.style.cursor='pointer';}
+    var badgeLabel=g.status==='NOT STARTED'?'NOT STARTED':g.pct+'% DONE';
+    card.innerHTML=
+      (isClickable?'<div style="position:absolute;top:7px;left:7px;z-index:3;background:var(--g3);border:1px solid var(--green);color:var(--green);font-size:8px;padding:2px 8px;letter-spacing:2px;font-family:var(--font);">▶ VIEW MODS</div>':'')
+      +'<div style="position:absolute;top:7px;right:7px;z-index:2;background:'+badgeBg+';border:1px solid '+badgeColor+';color:'+badgeColor+';font-size:8px;padding:2px 8px;letter-spacing:2px;font-family:var(--font);">'+badgeLabel+'</div>'
+      +'<div class="gmod-thumb"><iframe src="'+g.yt+'?mute=1&controls=0&showinfo=0&rel=0&loop=1" allowfullscreen></iframe></div>'
+      +'<div class="gmod-body">'
+      +'<div style="display:flex;align-items:center;gap:7px;margin-bottom:4px;"><span style="width:12px;height:12px;border-radius:50%;background:'+g.color+';flex-shrink:0;display:inline-block;"></span>'
+      +'<div class="gmod-name" style="color:'+g.color+'">'+g.name+'</div></div>'
+      +'<div class="gmod-sub">'+g.sub+'</div>'
+      +'<div class="gmod-bar-lbl"><span>MODS READY</span><span style="color:'+pctColor+'">'+g.pct+'%</span></div>'
+      +'<div class="gmod-bar"><div class="gmod-fill" style="width:'+g.pct+'%;background:'+g.color+'"></div></div>'
+      +'</div>';
+    if(isClickable){
+      (function(pid){card.addEventListener('click',function(){openModPage(pid);});})(g.modPage);
+    }
+    el.appendChild(card);
+  });
+}
+
+function openModPage(pageId){
+  /* Show the sub-page for a specific game's mods */
+  nav(pageId, null);
+  /* Update breadcrumb */
+  var bc=document.getElementById('bcPage');if(bc)bc.textContent='GAME MODS > '+pageId.toUpperCase();
+}
+
+var geolocatorBat="@echo off\ntitle Geolocator\ncolor 0A\n\necho.\necho  ================================\necho        IP GEOLOCATOR\necho  ================================\necho.\n\nset /p IP=\"  Enter IP address (or leave blank for your own): \"\n\nif \"%IP%\"==\"\" (\n    echo.\n    echo  [*] Fetching your public IP...\n    for /f \"tokens=*\" %%i in ('powershell -NoProfile -Command \"(Invoke-WebRequest -Uri 'https://api.ipify.org' -UseBasicParsing).Content.Trim()\"') do set IP=%%i\n    echo  [*] Your IP: %IP%\n    echo.\n)\n\necho  [*] Looking up %IP%...\necho.\n\npowershell -NoProfile -ExecutionPolicy Bypass -File \"%~dp0geolocate.ps1\" -ip \"%IP%\"\n\nif not exist geo_tmp.txt (\n    echo  [!] Failed to retrieve data. Check your connection.\n    echo.\n    pause\n    exit /b\n)\n\nfor /f \"usebackq tokens=1* delims==\" %%A in (\"geo_tmp.txt\") do (\n    set \"RAW=%%B\"\n    setlocal enabledelayedexpansion\n    set \"VAL=!RAW:~1,-1!\"\n    for /f \"tokens=*\" %%V in (\"!VAL!\") do endlocal & set \"%%A=%%V\"\n)\n\ndel geo_tmp.txt >nul 2>&1\n\necho  IP:           %IP%\necho  Type:         %TYPE%\necho  Country:      %COUNTRY%\necho  Region:       %REGION%\necho  City:         %CITY%\necho  Postal Code:  %ZIP%\necho  Coordinates:  %LAT%, %LON%\necho  Timezone:     %TZ%\necho  ISP:          %ISP%\necho  ASN:          %ASN%\necho  Google Maps:  %MAPS%\necho.\n\nset /p SAVEJSON=\"  Do you want to make a JSON file for this? (yes/no): \"\nif /i \"%SAVEJSON%\"==\"yes\" goto :savejson\nif /i \"%SAVEJSON%\"==\"y\"   goto :savejson\ngoto :done\n\n:savejson\nif not exist \"geolocations\" mkdir \"geolocations\"\nset FILENAME=geolocations\\%IP%.json\n(\necho {\necho   \"ip\":         \"%IP%\",\necho   \"type\":       \"%TYPE%\",\necho   \"country\":    \"%COUNTRY%\",\necho   \"region\":     \"%REGION%\",\necho   \"city\":       \"%CITY%\",\necho   \"postalCode\": \"%ZIP%\",\necho   \"latitude\":   %LAT%,\necho   \"longitude\":  %LON%,\necho   \"timezone\":   \"%TZ%\",\necho   \"isp\":        \"%ISP%\",\necho   \"asn\":        \"%ASN%\",\necho   \"googleMaps\": \"%MAPS%\"\necho }\n) > \"%FILENAME%\"\necho.\necho  [+] Saved to: %FILENAME%\necho.\n\n:done\necho.\npause\n";
+var geolocatePs1="param([string]$ip)\n\n$r = (Invoke-WebRequest -Uri \"https://ipwho.is/$ip\" -UseBasicParsing).Content | ConvertFrom-Json\n\nfunction val($v) { if ($v) { return \"$v\" } else { return \"N/A\" } }\n\n$country = val $r.country\n$city    = val $r.city\n$region  = val $r.region\n$zip     = val $r.postal\n$lat     = if ($r.latitude)        { \"$($r.latitude)\" }        else { \"0\" }\n$lon     = if ($r.longitude)       { \"$($r.longitude)\" }       else { \"0\" }\n$tz      = if ($r.timezone.id)     { \"$($r.timezone.id)\" }     else { \"N/A\" }\n$isp     = if ($r.connection.isp)  { \"$($r.connection.isp)\" }  else { \"N/A\" }\n$asn     = if ($r.connection.org)  { \"$($r.connection.org)\" }  else { \"N/A\" }\n$type    = val $r.type\n$maps    = \"https://www.google.com/maps/?q=$lat,$lon\"\n\n$lines = @(\n    \"COUNTRY=[$country]\",\n    \"CITY=[$city]\",\n    \"REGION=[$region]\",\n    \"ZIP=[$zip]\",\n    \"LAT=[$lat]\",\n    \"LON=[$lon]\",\n    \"TZ=[$tz]\",\n    \"ISP=[$isp]\",\n    \"ASN=[$asn]\",\n    \"TYPE=[$type]\",\n    \"MAPS=[$maps]\"\n)\n\n[System.IO.File]::WriteAllLines(\"geo_tmp.txt\", $lines)\n";
+var passwordGenBat="@echo off\ntitle Password Spin Wheel - by Rob\nsetlocal enabledelayedexpansion\n\n:menu\ncls\ncolor 04\necho  ***  PASSWORD  SPIN  WHEEL  v2.0  ***\nping -n 1 -w 80 127.0.0.1 >nul\ncolor 06\necho  ***  PASSWORD  SPIN  WHEEL  v2.0  ***\nping -n 1 -w 80 127.0.0.1 >nul\ncolor 0E\necho  ***  PASSWORD  SPIN  WHEEL  v2.0  ***\nping -n 1 -w 80 127.0.0.1 >nul\ncolor 0A\necho  ***  PASSWORD  SPIN  WHEEL  v2.0  ***\nping -n 1 -w 80 127.0.0.1 >nul\ncolor 0B\necho  ***  PASSWORD  SPIN  WHEEL  v2.0  ***\nping -n 1 -w 80 127.0.0.1 >nul\ncolor 09\necho  ***  PASSWORD  SPIN  WHEEL  v2.0  ***\nping -n 1 -w 80 127.0.0.1 >nul\ncolor 0D\necho  ***  PASSWORD  SPIN  WHEEL  v2.0  ***\nping -n 1 -w 80 127.0.0.1 >nul\ncolor 0A\ncls\necho.\necho  ***  PASSWORD  SPIN  WHEEL  v2.0  by Rob  ***\necho.\necho  +======================================+\necho  ^|  [1] Strong Password                ^|\necho  ^|  [2] Memorable Word Password        ^|\necho  ^|  [3] PIN Generator                  ^|\necho  ^|  [4] Exit                           ^|\necho  +======================================+\necho.\nset /p choice=\"  Choose (1-4): \"\n\nif \"!choice!\"==\"1\" set spintype=strong & goto askstrong\nif \"!choice!\"==\"2\" set spintype=memorable & goto spin\nif \"!choice!\"==\"3\" set spintype=pin & goto askpin\nif \"!choice!\"==\"4\" exit\ngoto menu\n\n:: ==========================================\n:askstrong\ncls\necho.\necho  +======================================+\necho  ^|         STRONG PASSWORD MODE        ^|\necho  +======================================+\necho.\nset /p pwlen=\"  How many characters? (8-32 recommended): \"\nif \"!pwlen!\"==\"\" set pwlen=12\nif !pwlen! lss 1 set pwlen=1\nif !pwlen! gtr 64 set pwlen=64\necho.\necho  Complexity levels:\necho   1-3  = letters only\necho   4-6  = letters + numbers\necho   7-9  = letters + numbers + symbols\necho   10   = maximum chaos ^(!@#$%%^&*^)\necho.\nset /p complexity=\"  Complexity (1-10): \"\nif \"!complexity!\"==\"\" set complexity=5\nif !complexity! lss 1 set complexity=1\nif !complexity! gtr 10 set complexity=10\ngoto spin\n\n:: ==========================================\n:askpin\ncls\necho.\necho  +======================================+\necho  ^|            PIN GENERATOR            ^|\necho  +======================================+\necho.\nset /p pinlen=\"  How many digits? (1-20): \"\nif \"!pinlen!\"==\"\" set pinlen=6\nif !pinlen! lss 1 set pinlen=1\nif !pinlen! gtr 20 set pinlen=20\ngoto spin\n\n:: ==========================================\n:spin\ncls\necho.\necho  +======================================+\necho  ^|        SPINNING THE WHEEL...        ^|\necho  +======================================+\necho.\nping -n 1 -w 200 127.0.0.1 >nul\n\nset sf=0\n:spinloop\nset /a sf+=1\ncls\necho.\necho  +======================================+\necho  ^|        SPINNING THE WHEEL...        ^|\necho  +======================================+\necho.\n\nif !sf!==1 (\necho          +----------+\necho          ^|  \\  ^|  / ^|\necho          ^|   \\ ^| /  ^|\necho          ^|  --[O]-- ^|\necho          ^|   / ^| \\  ^|\necho          ^|  /  ^|  \\ ^|\necho          +----------+\n)\nif !sf!==2 (\necho          +----------+\necho          ^|    ^|     ^|\necho          ^|    ^|     ^|\necho          ^|  --[O]-- ^|\necho          ^|    ^|     ^|\necho          ^|    ^|     ^|\necho          +----------+\n)\nif !sf!==3 (\necho          +----------+\necho          ^|  /  ^|  \\ ^|\necho          ^| /   ^|   \\^|\necho          ^|  --[O]-- ^|\necho          ^| \\   ^|   /^|\necho          ^|  \\  ^|  / ^|\necho          +----------+\n)\nif !sf!==4 (\necho          +----------+\necho          ^|    ^|     ^|\necho          ^|    ^|     ^|\necho          ^|  --[O]-- ^|\necho          ^|    ^|     ^|\necho          ^|    ^|     ^|\necho          +----------+\n)\nif !sf!==5 (\necho          +----------+\necho          ^|  \\  ^|  / ^|\necho          ^|   \\ ^| /  ^|\necho          ^|  --[O]-- ^|\necho          ^|   / ^| \\  ^|\necho          ^|  /  ^|  \\ ^|\necho          +----------+\n)\nif !sf!==6 (\necho          +----------+\necho          ^|  ^^^^^^  ^|\necho          ^| ^<[***]^> ^|\necho          ^| ^<[***]^> ^|\necho          ^|  vvvvv  ^|\necho          ^| WINNER! ^|\necho          +----------+\necho.\necho     ^>^>^> DING DING DING! ^<^<^<\n)\n\nping -n 1 -w 300 127.0.0.1 >nul\nif !sf! lss 6 goto spinloop\nping -n 1 -w 500 127.0.0.1 >nul\ngoto %spintype%\n\n:: ==========================================\n:strong\nset pool=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\nif !complexity! geq 4 set pool=!pool!0123456789\nif !complexity! geq 7 set pool=!pool!@#$-+=?\nif !complexity! geq 10 set pool=!pool!^&*~\n\n:: Count pool length\nset tmppool=!pool!\nset plen=0\n:countloop\nif not \"!tmppool!\"==\"\" (\n  set tmppool=!tmppool:~1!\n  set /a plen+=1\n  goto countloop\n)\n\n:: Generate password\nset password=\nfor /l %%i in (1,1,!pwlen!) do (\n  set /a pick=!random! %% !plen!\n  call set ch=%%pool:~!pick!,1%%\n  set password=!password!!ch!\n)\n\n:: Force a number in if complexity >= 4\nif !complexity! geq 4 (\n  set digits=0123456789\n  set /a dp=!random! %% 10\n  call set dch=%%digits:~!dp!,1%%\n  set /a dpos=!random! %% !pwlen!\n  set password=!password:~0,%dpos%!!dch!!password:~%dpos%!\n  set password=!password:~0,%pwlen%!\n)\n\n:: Force a symbol if complexity >= 7\nif !complexity! geq 7 (\n  set /a sp=!random! %% 4\n  if !sp!==0 set sch=@\n  if !sp!==1 set sch=#\n  if !sp!==2 set sch=$\n  if !sp!==3 set sch=+\n  set /a spos=!random! %% !pwlen!\n  set password=!password:~0,%spos%!!sch!!password:~%spos%!\n  set password=!password:~0,%pwlen%!\n)\n\ncls\necho.\necho  +======================================+\necho  ^|        YOUR PASSWORD IS:            ^|\necho  ^|                                     ^|\necho  ^|   !password!\necho  ^|                                     ^|\necho  ^| Chars: !pwlen!  ^|  Complexity: !complexity!/10          ^|\necho  +======================================+\necho.\necho  Tip: Store this in a password manager!\necho.\npause\ngoto menu\n\n:: ==========================================\n:memorable\nset /a i1=!random! %% 40\nset /a i2=!random! %% 40\nset /a i3=!random! %% 40\n\n:norepeat\nif !i2!==!i1! ( set /a i2=(!i2!+1) %% 40 & goto norepeat )\n:norepeat2\nif !i3!==!i1! ( set /a i3=(!i3!+3) %% 40 & goto norepeat2 )\nif !i3!==!i2! ( set /a i3=(!i3!+7) %% 40 & goto norepeat2 )\n\nset w0=Apple   & set w1=Tiger   & set w2=Rocket  & set w3=Castle\nset w4=Dragon  & set w5=Forest  & set w6=Falcon  & set w7=Comet\nset w8=Blaze   & set w9=Storm   & set w10=Ninja  & set w11=Ocean\nset w12=Pizza  & set w13=Laser  & set w14=Ghost  & set w15=Robot\nset w16=Cactus & set w17=Viking & set w18=Wizard & set w19=Turbo\nset w20=Shadow & set w21=Vortex & set w22=Mystic & set w23=Thunder\nset w24=Cobalt & set w25=Phoenix& set w26=Glacier& set w27=Quartz\nset w28=Ember  & set w29=Pulsar & set w30=Cipher & set w31=Zenith\nset w32=Raven  & set w33=Tundra & set w34=Specter& set w35=Nomad\nset w36=Frost  & set w37=Nebula & set w38=Titan  & set w39=Epoch\n\ncall set word1=%%w!i1!%%\ncall set word2=%%w!i2!%%\ncall set word3=%%w!i3!%%\n\nset /a num=!random! %% 9000 + 1000\n\nset /a sep=!random! %% 3\nif !sep!==0 set sp=-\nif !sep!==1 set sp=_\nif !sep!==2 set sp=.\n\nset password=!word1!!sp!!word2!!sp!!word3!!sp!!num!\n\ncls\necho.\necho  +======================================+\necho  ^|      YOUR MEMORABLE PASSWORD:       ^|\necho  ^|                                     ^|\necho  ^|   !password!\necho  ^|                                     ^|\necho  +======================================+\necho.\necho  Easy to remember, very hard to crack!\necho.\npause\ngoto menu\n\n:: ==========================================\n:pin\nset pin=\nfor /l %%i in (1,1,!pinlen!) do (\n  set /a d=!random! %% 10\n  set pin=!pin!!d!\n)\n\ncls\necho.\necho  +======================================+\necho  ^|           YOUR PIN IS:              ^|\necho  ^|                                     ^|\necho  ^|      [ !pin! ]\necho  ^|                                     ^|\necho  ^| Length: !pinlen! digits                        ^|\necho  +======================================+\necho.\necho  Use for Windows Hello, phone or lock!\necho.\npause\ngoto menu\n";
+
+function dl(name,content){var b=new Blob([content],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;a.click();URL.revokeObjectURL(a.href);toast('Downloaded: '+name);}
+function pv(name,content){document.getElementById('pvTitle').textContent=name;document.getElementById('pvContent').textContent=content;openModal('pvModal');}
+var pwMode='strong',lastPw='';
+function setPwMode(m){pwMode=m;['s','m','p'].forEach(function(x){var k={s:'strong',m:'memorable',p:'pin'}[x],b=document.getElementById('m'+x);if(b){b.style.borderColor=k===m?'var(--green)':'var(--dim)';b.style.color=k===m?'var(--green)':'var(--dim)';}});document.getElementById('pwc').style.display=m==='strong'?'block':'none';}
+function genPw(){var el=document.getElementById('pwRes');if(!el)return;var spin=['/ Spinning...','- Spinning...','| Spinning...'],fi=0;var iv=setInterval(function(){el.textContent=spin[fi++%3];},80);setTimeout(function(){clearInterval(iv);var pw='',len=parseInt(document.getElementById('pwL').value)||16;if(pwMode==='strong'){var pool='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$-+=?!';var arr=new Uint32Array(len);crypto.getRandomValues(arr);for(var i=0;i<len;i++)pw+=pool[arr[i]%pool.length];}else if(pwMode==='memorable'){var words=['Apple','Tiger','Rocket','Castle','Dragon','Forest','Falcon','Comet','Blaze','Storm','Neon','Pixel','Ghost','Virus','Cyber'];var sep=['-','_','.'],ri=new Uint32Array(4);crypto.getRandomValues(ri);pw=words[ri[0]%words.length]+sep[ri[3]%3]+words[ri[1]%words.length]+sep[ri[3]%3]+words[ri[2]%words.length]+sep[ri[3]%3]+(1000+Math.floor(Math.random()*9000));}else{var dig=new Uint32Array(len);crypto.getRandomValues(dig);for(var i=0;i<len;i++)pw+=String(dig[i]%10);}lastPw=pw;el.textContent=pw;},500);}
+async function copyPw(){if(!lastPw){toast('Generate first!',true);return;}try{await navigator.clipboard.writeText(lastPw);toast('Password copied!');}catch(e){toast('Copy failed',true);}}
+
+/* ── SUGGEST & RECOVERY ── */
+var MAIN_WH=_wh('MAIN_WH');
+async function sendSuggestion(){
+  var name=(document.getElementById('sfName').value||'').trim()||'Anonymous',sec=document.getElementById('sfSec').value,text=(document.getElementById('sfText').value||'').trim(),st=document.getElementById('sfStatus');
+  if(!text){st.style.color='var(--red)';st.textContent='Write a suggestion first.';return;}
+  st.style.color='var(--dim)';st.textContent='Sending...';
+  try{var r=await fetch(MAIN_WH,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({embeds:[{title:'💡 Feature Suggestion',color:0x00ff41,fields:[{name:'From',value:name,inline:true},{name:'Section',value:sec,inline:true},{name:'Suggestion',value:text}],footer:{text:'v5.2'},timestamp:new Date().toISOString()}]})});
+    if(r.ok){st.style.color='var(--green)';st.textContent='Sent! Thanks, '+name+'.';document.getElementById('sfText').value='';}
+    else{st.style.color='var(--red)';st.textContent='Failed ('+r.status+').';}
+  }catch(e){st.style.color='var(--red)';st.textContent='Network error.';}
+}
+async function sendRecoveryRequest(){
+  var user=(document.getElementById('hrUser').value||'').trim(),date=(document.getElementById('hrDate').value||'').trim(),token=(document.getElementById('hrToken').value||'').trim(),discord=(document.getElementById('hrDiscord').value||'').trim(),info=(document.getElementById('hrInfo').value||'').trim(),st=document.getElementById('hrStatus');
+  if(!user){st.style.color='var(--red)';st.textContent='Enter your username.';return;}
+  st.style.color='var(--dim)';st.textContent='Sending...';
+  try{var r=await fetch(MAIN_WH,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({embeds:[{title:'🆘 Account Recovery Request',color:0xffd700,fields:[{name:'Username',value:user||'N/A',inline:true},{name:'Discord',value:discord||'N/A',inline:true},{name:'Join Date',value:date||'N/A',inline:true},{name:'Token',value:token||'None'},{name:'Additional Info',value:info||'None'}],footer:{text:'v5.2'},timestamp:new Date().toISOString()}]})});
+    if(r.ok){st.style.color='var(--green)';st.textContent='Recovery request sent!';}
+    else{st.style.color='var(--red)';st.textContent='Failed ('+r.status+').';}
+  }catch(e){st.style.color='var(--red)';st.textContent='Network error.';}
+}
+
+/* ── HOME STATS ── */
+function updateHomeStats(){
+  var posts=getAllPosts().filter(function(p){return p.type==='callout';});
+  var el=document.getElementById('homePostCount');if(el)el.textContent=posts.length;
+  var users=getUsers();var el2=document.getElementById('homeUserCount');if(el2)el2.textContent=Object.keys(users).length;
+  /* Update online count from presence data */
+  try{
+    var data=JSON.parse(localStorage.getItem(ONLINE_KEY)||'{}');
+    var now=Date.now();
+    var cnt=Object.keys(data).filter(function(k){return now-data[k]<20000;}).length;
+    var el3=document.getElementById('homeOnlineCount');if(el3)el3.textContent=cnt||1;
+  }catch(e){}
+}
+setInterval(updateHomeStats,10000);
+
+/* ══════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════
+   URL SCANNER — Multi-API, no CORS issues
+   APIs: Google DoH, ipwho.is, crt.sh, hackertarget
+══════════════════════════════════════════════ */
+var URL_SCAN_HISTORY_KEY='tbv5:urlscans';
+
+function switchScanTab(name,el){
+  document.querySelectorAll('#page-urlscanner .scan-tab').forEach(function(t){t.classList.remove('on');});
+  document.querySelectorAll('#page-urlscanner .scan-tab-body').forEach(function(b){b.classList.remove('on');});
+  if(el)el.classList.add('on');
+  var body=document.getElementById('stab-'+name);
+  if(body)body.classList.add('on');
+}
+function urlScanLog(msg,type){
+  var log=document.getElementById('urlScanLog');if(!log)return;
+  var s=document.createElement('span');s.className='scan-log-line'+(type?' '+type:'');
+  s.textContent='['+new Date().toLocaleTimeString()+'] '+msg;
+  log.appendChild(s);log.scrollTop=log.scrollHeight;
+}
+function setUrlProgress(pct,label){
+  var fill=document.getElementById('urlProgressFill');
+  var lbl=document.getElementById('urlProgressLabel');
+  if(fill)fill.style.width=pct+'%';
+  if(lbl)lbl.textContent=label;
+}
+
+async function startUrlScan(){
+  var input=(document.getElementById('urlScanInput').value||'').trim();
+  if(!input){toast('Enter a URL to scan',true);return;}
+  if(!/^https?:\/\//i.test(input))input='https://'+input;
+  var url;try{url=new URL(input);}catch(e){toast('Invalid URL',true);return;}
+  var domain=url.hostname;
+
+  document.getElementById('urlScanResults').style.display='none';
+  document.getElementById('urlScanProgress').style.display='block';
+  document.getElementById('urlScanBtn').disabled=true;
+  document.getElementById('urlScanLog').innerHTML='';
+  setUrlProgress(3,'STARTING SCAN...');
+  urlScanLog('Target: '+domain);
+
+  var results={domain:domain,url:input,ips:[],ipInfo:{},dns:{},ssl:[],headers:{},threats:[],score:0};
+
+  try{
+    /* ─── STEP 1: DNS A + AAAA + MX + TXT records ─── */
+    setUrlProgress(10,'RESOLVING DNS...');
+    urlScanLog('Querying DNS records...');
+    var dnsTypes=['A','AAAA','MX','TXT','NS','CNAME'];
+    for(var i=0;i<dnsTypes.length;i++){
+      try{
+        var dr=await fetch('https://dns.google/resolve?name='+encodeURIComponent(domain)+'&type='+dnsTypes[i]);
+        var dd=await dr.json();
+        results.dns[dnsTypes[i]]=(dd.Answer||[]).map(function(r){return r.data;});
+        if(dnsTypes[i]==='A')results.ips=results.ips.concat(results.dns['A']||[]);
+        if(dnsTypes[i]==='AAAA')results.ips=results.ips.concat(results.dns['AAAA']||[]);
+      }catch(e){}
+    }
+    urlScanLog('DNS: '+results.ips.length+' IPs found ('+results.ips.slice(0,3).join(', ')+(results.ips.length>3?'...':'')+')', results.ips.length?'ok':'warn');
+
+    /* ─── STEP 2: IP Geolocation for first IP ─── */
+    if(results.ips.length){
+      setUrlProgress(30,'GEOLOCATING IPs...');
+      urlScanLog('Looking up IP geolocation...');
+      try{
+        var mainIp=results.ips[0];
+        var ipRes=await fetch('https://ipwho.is/'+encodeURIComponent(mainIp));
+        var ipData=await ipRes.json();
+        if(ipData.success!==false){
+          results.ipInfo={
+            ip:mainIp,country:ipData.country||'Unknown',
+            countryCode:ipData.country_code||'?',
+            city:ipData.city||'Unknown',region:ipData.region||'Unknown',
+            isp:ipData.connection&&ipData.connection.isp||ipData.org||'Unknown',
+            asn:ipData.connection&&ipData.connection.asn?'AS'+ipData.connection.asn:'Unknown',
+            org:ipData.org||'Unknown',
+            lat:ipData.latitude,lon:ipData.longitude,
+            timezone:ipData.timezone&&ipData.timezone.id||'Unknown'
+          };
+          urlScanLog('IP: '+mainIp+' → '+results.ipInfo.city+', '+results.ipInfo.country+' ('+results.ipInfo.isp+')','ok');
+          if(results.ips.length>1){
+            for(var j=1;j<Math.min(results.ips.length,4);j++){
+              try{
+                var ir2=await fetch('https://ipwho.is/'+encodeURIComponent(results.ips[j]));
+                var id2=await ir2.json();
+                if(id2.success!==false)urlScanLog('IP: '+results.ips[j]+' → '+( id2.city||'?')+', '+(id2.country||'?'),'ok');
+              }catch(e){}
+            }
+          }
+        }
+      }catch(e){urlScanLog('IP lookup failed: '+e.message,'warn');}
+    } else {
+      results.threats.push('No DNS A records — domain may not exist');
+      results.score+=20;
+      urlScanLog('WARNING: No IPs found for domain','warn');
+    }
+
+    /* ─── STEP 3: SSL Certificate check ─── */
+    setUrlProgress(50,'CHECKING SSL CERTIFICATES...');
+    urlScanLog('Querying certificate transparency logs...');
+    try{
+      var crtRes=await fetch('https://crt.sh/?q='+encodeURIComponent(domain)+'&output=json&exclude=expired&limit=10');
+      if(crtRes.ok){
+        var crtData=await crtRes.json();
+        results.ssl=crtData.slice(0,8).map(function(c){return{
+          id:c.id,issuer:c.issuer_name||'Unknown',
+          cn:c.common_name||'?',
+          notBefore:c.not_before,notAfter:c.not_after,
+          loggedAt:c.entry_timestamp
+        };});
+        urlScanLog('SSL: '+results.ssl.length+' certificates found','ok');
+      }
+    }catch(e){urlScanLog('SSL cert lookup failed','warn');}
+
+    /* ─── STEP 4: RDAP Domain Registration ─── */
+    setUrlProgress(65,'CHECKING DOMAIN REGISTRATION...');
+    urlScanLog('Fetching RDAP domain info...');
+    try{
+      var rdapRes=await fetch('https://rdap.verisign.com/com/v1/domain/'+encodeURIComponent(domain));
+      if(rdapRes.ok){
+        var rdapData=await rdapRes.json();
+        var events=rdapData.events||[];
+        var regEvent=events.find(function(e){return e.eventAction==='registration';});
+        var expEvent=events.find(function(e){return e.eventAction==='expiration';});
+        results.rdap={
+          registered:regEvent&&regEvent.eventDate,
+          expires:expEvent&&expEvent.eventDate,
+          registrar:(rdapData.entities||[]).map(function(e){return e.vcardArray&&e.vcardArray[1]?e.fn:'?';}).filter(Boolean)[0]||'Unknown',
+          status:(rdapData.status||[]).join(', ')
+        };
+        urlScanLog('Domain registered: '+(results.rdap.registered||'unknown'),'ok');
+        /* Check for recently registered domains (potential phishing) */
+        if(results.rdap.registered){
+          var regDate=new Date(results.rdap.registered);
+          var ageDays=(Date.now()-regDate.getTime())/(1000*60*60*24);
+          if(ageDays<30){results.threats.push('Recently registered domain (<30 days old)');results.score+=30;}
+          else if(ageDays<90){results.threats.push('Young domain (<90 days old)');results.score+=10;}
+        }
+      }
+    }catch(e){urlScanLog('RDAP lookup failed (domain may not be .com/.net)','warn');}
+
+    /* ─── STEP 5: HTTP Headers via proxy ─── */
+    setUrlProgress(80,'FETCHING HTTP HEADERS...');
+    urlScanLog('Checking HTTP headers...');
+    try{
+      var htRes=await fetch('https://api.hackertarget.com/httpheaders/?q='+encodeURIComponent(input));
+      if(htRes.ok){
+        var htText=await htRes.text();
+        if(!htText.includes('error')&&!htText.includes('API count')){
+          var lines=htText.trim().split('\n');
+          lines.forEach(function(line){
+            var colon=line.indexOf(':');
+            if(colon>0){var k=line.slice(0,colon).trim();var v=line.slice(colon+1).trim();results.headers[k]=v;}
+          });
+          var server=results.headers['Server']||results.headers['server']||'Unknown';
+          var xContentType=results.headers['X-Content-Type-Options'];
+          var xFrame=results.headers['X-Frame-Options'];
+          var hsts=results.headers['Strict-Transport-Security'];
+          if(!hsts)results.threats.push('Missing HSTS header (no HTTPS enforcement)');
+          if(!xContentType)results.threats.push('Missing X-Content-Type-Options header');
+          urlScanLog('Server: '+server+(hsts?' | HSTS: ✓':' | HSTS: ✗'),'ok');
+        }
+      }
+    }catch(e){urlScanLog('HTTP headers check failed','warn');}
+
+    /* ─── STEP 6: Threat Scoring ─── */
+    setUrlProgress(90,'ANALYSING THREATS...');
+    /* Known bad TLDs heuristic */
+    var domain_tld=domain.split('.').slice(-1)[0].toLowerCase();
+    var suspTLDs=['tk','ml','ga','cf','gq','pw','top','xyz','click','download','win'];
+    if(suspTLDs.includes(domain_tld)){results.threats.push('Suspicious TLD (.'+domain_tld+')');results.score+=20;}
+    /* Long subdomain heuristic */
+    if(domain.split('.').length>4){results.threats.push('Many subdomain levels (potential phishing)');results.score+=15;}
+    /* No SSL */
+    if(results.ssl.length===0&&url.protocol==='http:'){results.threats.push('No HTTPS / no SSL certificate');results.score+=25;}
+    results.score=Math.min(100,results.score);
+    urlScanLog('Threat score: '+results.score+'/100 | '+results.threats.length+' indicators',results.score>50?'warn':'ok');
+
+    setUrlProgress(100,'SCAN COMPLETE');
+    renderUrlScanResultsV2(results);
+  }catch(e){
+    urlScanLog('Scan error: '+e.message,'err');
+    setUrlProgress(100,'ERROR');
+    document.getElementById('urlScanBtn').disabled=false;
+    return;
+  }
+  document.getElementById('urlScanBtn').disabled=false;
+}
+
+var FLAG_EMOJI={US:'🇺🇸',GB:'🇬🇧',DE:'🇩🇪',FR:'🇫🇷',NL:'🇳🇱',RU:'🇷🇺',CN:'🇨🇳',JP:'🇯🇵',AU:'🇦🇺',CA:'🇨🇦',SE:'🇸🇪',CZ:'🇨🇿',IN:'🇮🇳',BR:'🇧🇷',KR:'🇰🇷',SG:'🇸🇬',HK:'🇭🇰',UA:'🇺🇦',PL:'🇵🇱',IT:'🇮🇹',ES:'🇪🇸',TR:'🇹🇷',MX:'🇲🇽',AR:'🇦🇷',ZA:'🇿🇦'};
+
+function renderUrlScanResultsV2(data){
+  document.getElementById('urlScanProgress').style.display='none';
+  document.getElementById('urlScanResults').style.display='block';
+  var score=data.score||0;
+  var badge=document.getElementById('urlThreatBadge');
+  var fill=document.getElementById('urlThreatFill');
+  var scoreEl=document.getElementById('urlThreatScore');
+  if(score>=60){badge.className='threat-badge threat-danger';badge.textContent='⚠ HIGH RISK';}
+  else if(score>=25){badge.className='threat-badge threat-warn';badge.textContent='⚠ SUSPICIOUS';}
+  else{badge.className='threat-badge threat-safe';badge.textContent='✓ LOOKS CLEAN';}
+  fill.style.width=Math.max(4,score)+'%';
+  fill.style.background=score>=60?'var(--red)':score>=25?'var(--gold)':'var(--green)';
+  scoreEl.textContent='Risk score: '+score+'/100';scoreEl.style.color=fill.style.background;
+
+  var cc=data.ipInfo&&data.ipInfo.countryCode||'?';
+  var flag=FLAG_EMOJI[cc]||'🌐';
+  /* Verdicts */
+  var vEl=document.getElementById('urlVerdicts');
+  if(data.threats.length){
+    vEl.innerHTML=data.threats.map(function(t){return '<div style="color:var(--gold)">⚠ '+escH(t)+'</div>';}).join('');
+  } else {
+    vEl.innerHTML='<div style="color:var(--green)">✓ No obvious threats detected</div>';
+  }
+  /* Screenshot placeholder */
+  var ph=document.getElementById('urlScreenshotPH');
+  if(ph)ph.textContent='📷 Screenshot not available (requires backend proxy)';
+  var img=document.getElementById('urlScreenshot');if(img)img.style.display='none';
+
+  /* SUMMARY TAB */
+  var ip=data.ipInfo;
+  var sumHtml='<div class="scan-kv"><span class="scan-kv-k">Domain</span><span class="scan-kv-v" style="color:var(--blue)">'+escH(data.domain)+'</span></div>'
+    +'<div class="scan-kv"><span class="scan-kv-k">Full URL</span><span class="scan-kv-v" style="font-size:9px;word-break:break-all">'+escH(data.url)+'</span></div>'
+    +(ip&&ip.ip?'<div class="scan-kv"><span class="scan-kv-k">Main IP</span><span class="scan-kv-v" style="color:var(--blue)">'+escH(ip.ip)+'</span></div>':'')
+    +(ip&&ip.country?'<div class="scan-kv"><span class="scan-kv-k">Location</span><span class="scan-kv-v">'+flag+' '+escH(ip.city)+', '+escH(ip.country)+'</span></div>':'')
+    +(ip&&ip.isp?'<div class="scan-kv"><span class="scan-kv-k">ISP / AS</span><span class="scan-kv-v">'+escH(ip.isp)+'</span></div>':'')
+    +(data.rdap&&data.rdap.registered?'<div class="scan-kv"><span class="scan-kv-k">Registered</span><span class="scan-kv-v">'+escH(data.rdap.registered.slice(0,10))+'</span></div>':'')
+    +(data.rdap&&data.rdap.expires?'<div class="scan-kv"><span class="scan-kv-k">Expires</span><span class="scan-kv-v">'+escH(data.rdap.expires.slice(0,10))+'</span></div>':'')
+    +(ip&&ip.timezone?'<div class="scan-kv"><span class="scan-kv-k">Timezone</span><span class="scan-kv-v">'+escH(ip.timezone)+'</span></div>':'')
+    +'<div class="scan-kv"><span class="scan-kv-k">Total IPs</span><span class="scan-kv-v">'+data.ips.length+'</span></div>'
+    +'<div class="scan-kv"><span class="scan-kv-k">SSL Certs</span><span class="scan-kv-v">'+(data.ssl.length?' '+data.ssl.length+' found':'None found')+'</span></div>';
+  document.getElementById('urlSummaryContent').innerHTML=sumHtml;
+
+  /* IP/DNS TAB */
+  var ipHtml='';
+  /* All IPs */
+  if(data.ips.length){
+    ipHtml+='<div style="font-size:9px;color:var(--dim);letter-spacing:2px;margin-bottom:8px;">IP ADDRESSES</div>';
+    ipHtml+=data.ips.map(function(ip){
+      var isIPv6=ip.includes(':');
+      return '<div class="scan-kv"><span class="scan-kv-k" style="font-family:var(--font);font-size:10px;color:var(--blue)">'+escH(ip)+(isIPv6?' <span style="font-size:8px;color:var(--dim)">[IPv6]</span>':'')+'</span>'
+        +'<a href="https://ipinfo.io/'+escH(ip)+'" target="_blank" class="btn btn-sm" style="font-size:8px;padding:2px 7px;">↗ LOOKUP</a></div>';
+    }).join('');
+  }
+  /* DNS Records */
+  Object.keys(data.dns).forEach(function(type){
+    var records=data.dns[type];if(!records.length)return;
+    ipHtml+='<div style="font-size:9px;color:var(--dim);letter-spacing:2px;margin:10px 0 6px;">'+type+' RECORDS</div>';
+    ipHtml+=records.map(function(r){return '<div class="scan-kv"><span class="scan-kv-k" style="font-size:9px;word-break:break-all">'+escH(r)+'</span></div>';}).join('');
+  });
+  if(!ipHtml)ipHtml='<div style="color:var(--dim);font-size:10px;">No DNS data available</div>';
+  document.getElementById('urlIpDnsContent').innerHTML=ipHtml;
+
+  /* HTTP TAB */
+  var httpHtml='<div style="font-size:9px;color:var(--dim);letter-spacing:2px;margin-bottom:8px;">HTTP HEADERS</div>';
+  var hkeys=Object.keys(data.headers);
+  if(hkeys.length){
+    /* Security headers highlighted */
+    var secHeaders=['Strict-Transport-Security','X-Frame-Options','X-Content-Type-Options','Content-Security-Policy','X-XSS-Protection'];
+    secHeaders.forEach(function(h){
+      var val=data.headers[h];
+      httpHtml+='<div class="scan-kv"><span class="scan-kv-k">'+h+'</span><span class="scan-kv-v" style="color:'+(val?'var(--green)':'var(--red)')+';">'+(val?escH(val.slice(0,40)):'MISSING')+'</span></div>';
+    });
+    httpHtml+='<div style="margin-top:8px;font-size:9px;color:var(--dim);letter-spacing:2px;">ALL HEADERS</div>';
+    hkeys.forEach(function(k){
+      httpHtml+='<div class="scan-kv"><span class="scan-kv-k">'+escH(k)+'</span><span class="scan-kv-v" style="font-size:9px">'+escH((data.headers[k]||'').slice(0,60))+'</span></div>';
+    });
+  } else {
+    httpHtml+='<div style="color:var(--dim);font-size:10px;">No HTTP header data (hackertarget.com rate limit may apply)</div>';
+    httpHtml+='<div style="margin-top:8px;"><a href="https://hackertarget.com/httpheaders/?q='+encodeURIComponent(data.url)+'" target="_blank" class="btn btn-sm">↗ Check on HackerTarget</a></div>';
+  }
+  document.getElementById('urlHttpContent').innerHTML=httpHtml;
+
+  /* TECH TAB */
+  var techHtml='<div style="font-size:9px;color:var(--dim);letter-spacing:2px;margin-bottom:8px;">SSL CERTIFICATES ('+data.ssl.length+')</div>';
+  if(data.ssl.length){
+    techHtml+=data.ssl.map(function(c){
+      var exp=c.notAfter?new Date(c.notAfter):null;
+      var expired=exp&&exp<new Date();
+      return '<div class="scan-kv"><span class="scan-kv-k" style="font-size:9px;word-break:break-all">'+escH(c.cn||'?')+'</span>'
+        +'<span class="scan-kv-v" style="font-size:8px;color:'+(expired?'var(--red)':'var(--green)')+';">'+(expired?'EXPIRED':'VALID')+' · '+escH((c.issuer||'?').split('O=')[1]||c.issuer||'?').slice(0,30)+'</span></div>';
+    }).join('');
+    techHtml+='<div style="margin-top:8px;"><a href="https://crt.sh/?q='+encodeURIComponent(data.domain)+'" target="_blank" class="btn btn-sm">↗ View all on crt.sh</a></div>';
+  } else {
+    techHtml+='<div style="color:var(--dim);font-size:10px;">No SSL certificates found</div>';
+  }
+  techHtml+='<div style="font-size:9px;color:var(--dim);letter-spacing:2px;margin:10px 0 6px;">THREAT INDICATORS</div>';
+  if(data.threats.length){
+    techHtml+=data.threats.map(function(t){return '<div class="scan-kv"><span style="color:var(--gold);font-size:9px;">⚠ '+escH(t)+'</span></div>';}).join('');
+  } else {
+    techHtml+='<div style="color:var(--green);font-size:10px;">✓ No threat indicators detected</div>';
+  }
+  document.getElementById('urlTechContent').innerHTML=techHtml;
+
+  /* RAW TAB */
+  document.getElementById('urlRawContent').textContent=JSON.stringify(data,null,2).slice(0,6000);
+
+  /* History */
+  saveUrlHistory({url:data.url,ts:Date.now(),clean:data.score<25,score:data.score,country:data.ipInfo&&data.ipInfo.countryCode||'?'});
+  loadUrlHistory();
+}
+
+/* History */
+function saveUrlHistory(entry){
+  var hist=JSON.parse(localStorage.getItem(URL_SCAN_HISTORY_KEY)||'[]');
+  hist.unshift(entry);if(hist.length>20)hist=hist.slice(0,20);
+  localStorage.setItem(URL_SCAN_HISTORY_KEY,JSON.stringify(hist));
+}
+function loadUrlHistory(){
+  var hist=JSON.parse(localStorage.getItem(URL_SCAN_HISTORY_KEY)||'[]');
+  var el=document.getElementById('urlHistoryList');if(!el)return;
+  if(!hist.length){el.innerHTML='<div style="font-size:10px;color:var(--dim);">No scans yet.</div>';return;}
+  el.innerHTML=hist.map(function(h){
+    var clean=h.clean!==false&&h.score<25;
+    return '<div class="scan-kv" style="cursor:pointer;" onclick="document.getElementById(\'urlScanInput\').value=\''+escH(h.url)+'\';startUrlScan();">'
+      +'<span class="scan-kv-k" style="font-size:9px;max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+escH(h.url)+'</span>'
+      +'<span style="display:flex;align-items:center;gap:8px;">'
+      +(clean?'<span style="color:var(--green);font-size:9px;">✓ CLEAN</span>':'<span style="color:var(--red);font-size:9px;">⚠ RISK: '+h.score+'</span>')
+      +'<span style="font-size:8px;color:var(--dim);">'+timeAgo(h.ts)+'</span></span></div>';
+  }).join('');
+}
+function clearUrlHistory(){localStorage.removeItem(URL_SCAN_HISTORY_KEY);loadUrlHistory();toast('History cleared');}
+
+/* ══════════════════════════════════════════════
+   FILE SCANNER — SHA-256 hash + VirusTotal check
+══════════════════════════════════════════════ */
+var FILE_SCAN_HISTORY_KEY='tbv5:filescans';
+var _selectedFile=null;
+
+function handleFileDrop(e){
+  e.preventDefault();
+  document.getElementById('fileDropZone').classList.remove('drag');
+  var f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];
+  if(f)processSelectedFile(f);
+}
+function handleFileSelect(e){
+  var f=e.target&&e.target.files&&e.target.files[0];
+  if(f)processSelectedFile(f);
+}
+
+function processSelectedFile(file){
+  if(file.size>32*1024*1024){toast('File too large — max 32MB',true);return;}
+  _selectedFile=file;
+  document.getElementById('fileInfo').style.display='block';
+  document.getElementById('fileScanBtn').style.display='flex';
+  document.getElementById('fileScanResults').style.display='none';
+  document.getElementById('fInfoName').textContent=file.name;
+  document.getElementById('fInfoSize').textContent=formatFileSize(file.size);
+  document.getElementById('fInfoType').textContent=file.type||'Unknown';
+  document.getElementById('fInfoHash').textContent='Computing...';
+  computeSHA256(file).then(function(hash){
+    document.getElementById('fInfoHash').textContent=hash;
+    /* Check if we already scanned this hash */
+    checkFileHashHistory(hash);
+  });
+  var dz=document.getElementById('fileDropZone');
+  dz.innerHTML='<div style="font-size:28px;margin-bottom:8px;">📄</div><div style="font-size:11px;color:var(--text);">'+escH(file.name)+'</div><div style="font-size:9px;color:var(--dim);margin-top:4px;">Click to change file</div>';
+}
+
+function formatFileSize(bytes){
+  if(bytes<1024)return bytes+' B';
+  if(bytes<1024*1024)return (bytes/1024).toFixed(1)+' KB';
+  return (bytes/1024/1024).toFixed(2)+' MB';
+}
+
+async function computeSHA256(file){
+  return new Promise(function(resolve){
+    var reader=new FileReader();
+    reader.onload=async function(e){
+      try{
+        var buf=e.target.result;
+        var hashBuf=await crypto.subtle.digest('SHA-256',buf);
+        var hex=Array.from(new Uint8Array(hashBuf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+        resolve(hex);
+      }catch(err){resolve('hash-error');}
+    };
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+function checkFileHashHistory(hash){
+  var hist=JSON.parse(localStorage.getItem(FILE_SCAN_HISTORY_KEY)||'[]');
+  var prev=hist.find(function(h){return h.hash===hash;});
+  if(prev){
+    toast('Hash match found in history! Showing cached results.');
+    displayFileScanResults(prev.result,prev.filename,hash);
+  }
+}
+
+function fileScanLog(msg,type){
+  var log=document.getElementById('fileScanLog');if(!log)return;
+  var s=document.createElement('span');s.className='scan-log-line'+(type?' '+type:'');
+  s.textContent='['+new Date().toLocaleTimeString()+'] '+msg;
+  log.appendChild(s);log.scrollTop=log.scrollHeight;
+}
+function setFileProgress(pct,label){
+  var fill=document.getElementById('fileProgressFill');
+  var lbl=document.getElementById('fileProgressLabel');
+  if(fill)fill.style.width=pct+'%';
+  if(lbl)lbl.textContent=label;
+}
+
+async function startFileScan(){
+  if(!_selectedFile){toast('Select a file first',true);return;}
+  document.getElementById('fileScanProgress').style.display='block';
+  document.getElementById('fileScanResults').style.display='none';
+  document.getElementById('fileScanBtn').disabled=true;
+  document.getElementById('fileScanLog').innerHTML='';
+  setFileProgress(5,'COMPUTING FILE HASH...');
+  fileScanLog('Computing SHA-256 hash...');
+
+  var hash=document.getElementById('fInfoHash').textContent;
+  if(hash==='Computing...'||hash==='hash-error'){
+    hash=await computeSHA256(_selectedFile);
+    document.getElementById('fInfoHash').textContent=hash;
+  }
+  fileScanLog('SHA-256: '+hash.slice(0,20)+'...','ok');
+  setFileProgress(20,'CHECKING HASH DATABASE...');
+
+  /* ─── Step 1: Try MalwareBazaar hash lookup (abuse.ch — free, no key) ─── */
+  setFileProgress(35,'QUERYING MALWAREBAZAAR DATABASE...');
+  fileScanLog('Checking MalwareBazaar (abuse.ch)...');
+  var foundInDB=false;
+  try{
+    var mbRes=await fetch('https://mb-api.abuse.ch/api/v1/',{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'query=get_info&hash='+encodeURIComponent(hash)
+    });
+    if(mbRes.ok){
+      var mbData=await mbRes.json();
+      if(mbData.query_status==='hash_not_found'){
+        fileScanLog('Not in MalwareBazaar (no known malware match)','ok');
+      } else if(mbData.query_status==='ok'&&mbData.data&&mbData.data.length>0){
+        var entry=mbData.data[0];
+        fileScanLog('⚠ FOUND IN MALWAREBAZAAR! Tagged as: '+( entry.tags||[]).join(', '),'err');
+        foundInDB=true;
+        var result={
+          source:'malwarebazaar',malicious:1,suspicious:0,undetected:0,harmless:0,total:1,
+          engines:{},flags:['Found in MalwareBazaar malware database'],
+          sha256:entry.sha256_hash||hash,sha1:entry.sha1_hash||'',md5:entry.md5_hash||'',
+          size:entry.file_size||_selectedFile.size,type:entry.file_type||'Unknown',
+          names:[entry.file_name||_selectedFile.name],
+          mbTags:entry.tags||[],mbSignature:entry.signature||'Unknown',
+          mbUrl:'https://bazaar.abuse.ch/sample/'+hash+'/',
+          firstSeen:entry.first_seen?new Date(entry.first_seen).getTime()/1000:null,
+          note:'⚠ This file hash was found in the MalwareBazaar malware database!'
+        };
+        displayFileScanResults(result,_selectedFile.name,hash);
+        saveFileHistory({hash:hash,filename:_selectedFile.name,ts:Date.now(),result:result});
+      }
+    }
+  }catch(e){fileScanLog('MalwareBazaar lookup failed: '+e.message,'warn');}
+
+  if(!foundInDB){
+    /* ─── Step 2: Try ThreatFox hash lookup (abuse.ch — free, no key) ─── */
+    setFileProgress(50,'QUERYING THREATFOX DATABASE...');
+    fileScanLog('Checking ThreatFox IoC database...');
+    try{
+      var tfRes=await fetch('https://threatfox-api.abuse.ch/api/v1/',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({query:'search_hash',hash:hash})
+      });
+      if(tfRes.ok){
+        var tfData=await tfRes.json();
+        if(tfData.query_status==='no_results'){
+          fileScanLog('Not in ThreatFox database (good sign)','ok');
+        } else if(tfData.query_status==='ok'&&tfData.data){
+          var ioc=tfData.data[0]||{};
+          fileScanLog('⚠ FOUND IN THREATFOX! Threat type: '+(ioc.threat_type||'unknown'),'err');
+          foundInDB=true;
+          var result={
+            source:'threatfox',malicious:1,suspicious:0,undetected:0,harmless:0,total:1,
+            flags:['Found in ThreatFox IoC database — Threat: '+(ioc.threat_type||'unknown')+(ioc.malware?', Malware: '+ioc.malware:'')],
+            sha256:hash,sha1:'',md5:'',size:_selectedFile.size,
+            type:ioc.malware_mtype||'Unknown',names:[_selectedFile.name],
+            note:'⚠ This file is linked to a known threat in the ThreatFox database.'
+          };
+          displayFileScanResults(result,_selectedFile.name,hash);
+          saveFileHistory({hash:hash,filename:_selectedFile.name,ts:Date.now(),result:result});
+        }
+      }
+    }catch(e){fileScanLog('ThreatFox lookup failed: '+e.message,'warn');}
+
+    if(!foundInDB){
+      /* ─── Step 3: Full local analysis ─── */
+      setFileProgress(60,'NOT IN THREAT DATABASES — RUNNING LOCAL ANALYSIS...');
+      fileScanLog('Running local file analysis...','ok');
+      await localFileAnalysis(_selectedFile,hash);
+    }
+  }
+  document.getElementById('fileScanBtn').disabled=false;
+  loadFileHistory();
+}
+
+function buildVTResult(vtData){
+  var attr=vtData.data&&vtData.data.attributes||{};
+  var stats=attr.last_analysis_stats||{};
+  var results=attr.last_analysis_results||{};
+  return {
+    source:'virustotal',
+    malicious:stats.malicious||0,
+    suspicious:stats.suspicious||0,
+    undetected:stats.undetected||0,
+    harmless:stats.harmless||0,
+    total:(stats.malicious||0)+(stats.suspicious||0)+(stats.undetected||0)+(stats.harmless||0),
+    engines:results,
+    sha256:attr.sha256||'',
+    sha1:attr.sha1||'',
+    md5:attr.md5||'',
+    size:attr.size||0,
+    type:attr.type_description||attr.magic||'Unknown',
+    names:attr.names||[],
+    firstSeen:attr.first_submission_date,
+    lastAnalysis:attr.last_analysis_date
+  };
+}
+
+async function localFileAnalysis(file,hash){
+  fileScanLog('Analysing file locally...');
+  setFileProgress(55,'READING FILE CONTENTS...');
+  var ext=file.name.split('.').pop().toLowerCase();
+  var suspiciousExts=['exe','bat','cmd','vbs','ps1','scr','msi','dll','sys','hta','js','jar','py','sh'];
+  var isSusp=suspiciousExts.includes(ext);
+  
+  /* Read first 4KB to check magic bytes */
+  var header=await readFileHeader(file,512);
+  var magic=getMagicBytes(header);
+  
+  fileScanLog('File type detected: '+magic,'ok');
+  setFileProgress(70,'CHECKING FILE SIGNATURES...');
+
+  /* Simple heuristic checks */
+  var flags=[];
+  if(isSusp)flags.push('Executable file type ('+ext+')');
+  if(magic.includes('MZ')||magic.includes('PE'))flags.push('Windows PE executable format');
+  if(magic.includes('ELF'))flags.push('Linux ELF executable format');
+  if(file.size<1024&&isSusp)flags.push('Very small executable (possible dropper)');
+  if(file.size>10*1024*1024)flags.push('Large file (>10MB)');
+
+  /* Extract readable strings for analysis */
+  var strings=await extractStrings(file);
+  var suspStrings=strings.filter(function(s){
+    return /powershell|cmd\.exe|regsvr32|wscript|cscript|mshta|certutil|wget|curl|http:|bitcoin|wallet|ransom|encrypt|decrypt/i.test(s);
+  });
+  if(suspStrings.length>0)flags.push('Suspicious strings: '+suspStrings.slice(0,3).join(', '));
+
+  setFileProgress(90,'BUILDING REPORT...');
+  fileScanLog(flags.length>0?'⚠ '+flags.length+' suspicious indicators found':'✓ No obvious threats detected','ok');
+
+  var result={
+    source:'local',
+    malicious:flags.length>3?1:0,
+    suspicious:flags.length>0?flags.length:0,
+    undetected:0,
+    harmless:0,
+    total:1,
+    flags:flags,
+    strings:strings.slice(0,30),
+    suspStrings:suspStrings,
+    sha256:hash,
+    sha1:'N/A (local analysis)',
+    md5:'N/A (local analysis)',
+    size:file.size,
+    type:magic+(ext?' (.'+ext+')':''),
+    names:[file.name],
+    magic:magic,
+    note:'Local analysis completed. MalwareBazaar + ThreatFox databases checked. File not found in known malware databases.'
+  };
+  displayFileScanResults(result,file.name,hash);
+  saveFileHistory({hash:hash,filename:file.name,ts:Date.now(),result:result});
+}
+
+async function readFileHeader(file,bytes){
+  return new Promise(function(resolve){
+    var reader=new FileReader();
+    reader.onload=function(e){resolve(new Uint8Array(e.target.result));};
+    reader.readAsArrayBuffer(file.slice(0,bytes));
+  });
+}
+function getMagicBytes(bytes){
+  if(!bytes||bytes.length<4)return 'Unknown';
+  var h=Array.from(bytes.slice(0,4)).map(function(b){return b.toString(16).padStart(2,'0');}).join('').toUpperCase();
+  if(h.startsWith('4D5A'))return 'PE/MZ (Windows Executable)';
+  if(h.startsWith('7F454C46'))return 'ELF (Linux Executable)';
+  if(h.startsWith('504B0304'))return 'ZIP Archive';
+  if(h.startsWith('25504446'))return 'PDF Document';
+  if(h.startsWith('FFD8FF'))return 'JPEG Image';
+  if(h.startsWith('89504E47'))return 'PNG Image';
+  if(h.startsWith('47494638'))return 'GIF Image';
+  if(h.startsWith('D0CF11E0'))return 'MS Office (DOC/XLS/PPT)';
+  if(h.startsWith('504B'))return 'ZIP/Office XML (DOCX/XLSX)';
+  if(h.startsWith('52617221'))return 'RAR Archive';
+  if(h.startsWith('1F8B'))return 'GZIP Archive';
+  if(h.startsWith('CAFEBABE'))return 'Java Bytecode (JAR/CLASS)';
+  return 'Unknown ('+h.slice(0,8)+')';
+}
+
+async function extractStrings(file){
+  return new Promise(function(resolve){
+    var reader=new FileReader();
+    reader.onload=function(e){
+      try{
+        var bytes=new Uint8Array(e.target.result);
+        var strings=[],cur='';
+        for(var i=0;i<bytes.length;i++){
+          var c=bytes[i];
+          if(c>=32&&c<127){cur+=String.fromCharCode(c);}
+          else{if(cur.length>=5)strings.push(cur);cur='';}
+        }
+        resolve(strings.slice(0,100));
+      }catch(err){resolve([]);}
+    };
+    reader.readAsArrayBuffer(file.slice(0,1024*1024)); /* Read first 1MB */
+  });
+}
+
+function displayFileScanResults(result,filename,hash){
+  document.getElementById('fileScanProgress').style.display='none';
+  document.getElementById('fileScanResults').style.display='block';
+  setFileProgress(100,'COMPLETE');
+
+  var total=result.total||1;
+  var malPct=Math.round(((result.malicious||0)+(result.suspicious||0))/total*100);
+  var badge=document.getElementById('fileThreatBadge');
+  var fill=document.getElementById('fileThreatFill');
+  var scoreEl=document.getElementById('fileThreatScore');
+
+  if(result.malicious>0||(result.source==='local'&&result.flags&&result.flags.length>3)){
+    badge.className='threat-badge threat-danger';badge.textContent='⚠ DANGEROUS';
+    fill.style.background='var(--red)';fill.style.width=Math.max(10,malPct)+'%';
+  } else if(result.suspicious>0||(result.flags&&result.flags.length>0)){
+    badge.className='threat-badge threat-warn';badge.textContent='⚠ SUSPICIOUS';
+    fill.style.background='var(--gold)';fill.style.width=Math.max(10,malPct)+'%';
+  } else {
+    badge.className='threat-badge threat-safe';badge.textContent='✓ CLEAN';
+    fill.style.background='var(--green)';fill.style.width='5%';
+  }
+  scoreEl.textContent=(result.source==='virustotal')
+    ?result.malicious+' / '+total+' engines flagged'
+    :(result.flags&&result.flags.length>0?result.flags.length+' suspicious indicators':' No threats detected');
+  scoreEl.style.color=result.malicious>0?'var(--red)':result.suspicious>0?'var(--gold)':'var(--green)';
+
+  /* File details */
+  document.getElementById('fileDetailsContent').innerHTML=
+    '<div class="scan-kv"><span class="scan-kv-k">Name</span><span class="scan-kv-v">'+escH(filename)+'</span></div>'
+    +'<div class="scan-kv"><span class="scan-kv-k">Size</span><span class="scan-kv-v">'+formatFileSize(result.size||0)+'</span></div>'
+    +'<div class="scan-kv"><span class="scan-kv-k">Type</span><span class="scan-kv-v">'+escH(result.type||'Unknown')+'</span></div>'
+    +(result.firstSeen?'<div class="scan-kv"><span class="scan-kv-k">First seen</span><span class="scan-kv-v">'+new Date(result.firstSeen*1000).toLocaleDateString()+'</span></div>':'')
+    +(result.note?'<div style="margin-top:8px;font-size:9px;color:var(--gold);line-height:1.8;">'+escH(result.note)+'</div>':'');
+
+  /* Hashes */
+  document.getElementById('fileHashContent').innerHTML=
+    '<div class="scan-kv"><span class="scan-kv-k">SHA-256</span><span class="scan-kv-v" style="font-size:8px;word-break:break-all;">'+escH((hash||result.sha256||'').slice(0,32)+'...')+'</span></div>'
+    +'<div class="scan-kv"><span class="scan-kv-k">SHA-1</span><span class="scan-kv-v" style="font-size:8px;">'+escH(result.sha1||'N/A')+'</span></div>'
+    +'<div class="scan-kv"><span class="scan-kv-k">MD5</span><span class="scan-kv-v" style="font-size:8px;">'+escH(result.md5||'N/A')+'</span></div>';
+
+  /* AV Engines tab */
+  var engHtml='';
+  /* MalwareBazaar result */
+  if(result.source==='malwarebazaar'){
+    engHtml='<div style="background:rgba(255,51,51,.08);border:1px solid var(--red);padding:12px;margin-bottom:10px;">'
+      +'<div style="font-family:monospace;font-size:18px;color:var(--red);letter-spacing:2px;margin-bottom:6px;">⚠ FOUND IN MALWAREBAZAAR</div>'
+      +'<div class="scan-kv"><span class="scan-kv-k">Signature</span><span class="scan-kv-v" style="color:var(--red)">'+escH(result.mbSignature||'Unknown')+'</span></div>'
+      +(result.mbTags&&result.mbTags.length?'<div class="scan-kv"><span class="scan-kv-k">Tags</span><span class="scan-kv-v">'+result.mbTags.map(escH).join(', ')+'</span></div>':'')
+      +'<div style="margin-top:8px;"><a href="'+escH(result.mbUrl||'#')+'" target="_blank" class="btn btn-sm btn-red">↗ VIEW ON MALWAREBAZAAR</a></div>'
+      +'</div>';
+  } else if(result.source==='threatfox'){
+    engHtml='<div style="background:rgba(255,51,51,.08);border:1px solid var(--red);padding:12px;">'
+      +'<div style="font-family:monospace;font-size:18px;color:var(--red);letter-spacing:2px;margin-bottom:6px;">⚠ FOUND IN THREATFOX DATABASE</div>'
+      +(result.flags||[]).map(function(f){return '<div style="color:var(--red);font-size:10px;">'+escH(f)+'</div>';}).join('')
+      +'<div style="margin-top:8px;"><a href="https://threatfox.abuse.ch/browse.php?search='+encodeURIComponent(result.sha256||'')+'" target="_blank" class="btn btn-sm btn-red">↗ VIEW ON THREATFOX</a></div>'
+      +'</div>';
+  } else if(result.source==='virustotal'&&result.engines){
+    var engKeys=Object.keys(result.engines);
+    engHtml='<div style="font-size:9px;color:var(--dim);margin-bottom:8px;">'+engKeys.length+' ENGINES SCANNED — '+result.malicious+' DETECTIONS</div>';
+    /* Sort: detections first */
+    var detected=engKeys.filter(function(k){return result.engines[k].category==='malicious'||result.engines[k].category==='suspicious';});
+    var clean=engKeys.filter(function(k){return result.engines[k].category==='undetected';});
+    var other=engKeys.filter(function(k){return detected.indexOf(k)<0&&clean.indexOf(k)<0;});
+    var sorted=detected.concat(other).concat(clean);
+    engHtml+=sorted.slice(0,40).map(function(k){
+      var e=result.engines[k];
+      var isDetect=e.category==='malicious'||e.category==='suspicious';
+      return '<div class="scan-engine-row">'
+        +'<span class="engine-name">'+escH(k)+'</span>'
+        +'<span class="engine-result '+(isDetect?'engine-detect':e.category==='undetected'?'engine-clean':'engine-skip')+'">'
+        +(isDetect?escH(e.result||'Detected'):'CLEAN')+'</span></div>';
+    }).join('');
+  } else if(result.flags&&result.flags.length>0){
+    engHtml='<div style="font-size:9px;color:var(--dim);margin-bottom:8px;">LOCAL ANALYSIS FLAGS</div>';
+    engHtml+=result.flags.map(function(f){
+      return '<div class="scan-kv"><span style="color:var(--gold);font-size:9px;">⚠ '+escH(f)+'</span></div>';
+    }).join('');
+    engHtml+='<div style="margin-top:10px;font-size:9px;color:var(--dim);">For engine-by-engine results, configure a VirusTotal API key.</div>';
+  } else {
+    engHtml='<div style="color:var(--green);font-size:10px;padding:10px 0;">✓ No threats detected in local analysis.</div>';
+  }
+  document.getElementById('fileEnginesContent').innerHTML=engHtml;
+
+  /* Behaviour tab */
+  document.getElementById('fileBehaviorContent').innerHTML=
+    '<div style="color:var(--dim);font-size:10px;line-height:2;padding:10px 0;">'
+    +'<div>🔍 File type: '+escH(result.type||'Unknown')+'</div>'
+    +'<div>📏 File size: '+formatFileSize(result.size||0)+'</div>'
+    +(result.suspStrings&&result.suspStrings.length?'<div style="color:var(--gold);margin-top:8px;">⚠ Suspicious strings found:</div>'
+      +result.suspStrings.slice(0,5).map(function(s){return '<div style="font-size:9px;padding-left:10px;color:var(--red)">'+escH(s)+'</div>';}).join('')
+      :'<div>✓ No suspicious strings in readable content</div>')
+    +'<div style="margin-top:10px;font-size:9px;color:var(--dim)">Full sandbox behaviour analysis requires backend integration.</div>'
+    +'</div>';
+
+  /* Strings tab */
+  var strHtml='<div style="font-size:9px;color:var(--dim);margin-bottom:8px;">EXTRACTED READABLE STRINGS</div>';
+  if(result.strings&&result.strings.length){
+    strHtml+='<div style="background:#000;border:1px solid var(--g3);padding:8px;max-height:300px;overflow-y:auto;">'
+      +result.strings.map(function(s){
+        var isSusp=/powershell|cmd\.exe|regsvr32|http:|bitcoin|ransom|encrypt/i.test(s);
+        return '<div style="font-size:9px;'+(isSusp?'color:var(--red)':'color:var(--dim)')+';line-height:1.7;word-break:break-all;">'+escH(s)+'</div>';
+      }).join('')+'</div>';
+  } else {
+    strHtml+='<div style="color:var(--dim);font-size:10px;">No readable strings extracted (binary or encrypted file)</div>';
+  }
+  document.getElementById('fileStringsContent').innerHTML=strHtml;
+  setFileProgress(100,'SCAN COMPLETE');
+}
+
+function switchFileScanTab(name,el){
+  document.querySelectorAll('#page-filescanner .scan-tab').forEach(function(t){t.classList.remove('on');});
+  document.querySelectorAll('#page-filescanner .scan-tab-body').forEach(function(b){b.classList.remove('on');});
+  if(el)el.classList.add('on');
+  var body=document.getElementById('fstab-'+name);
+  if(body)body.classList.add('on');
+}
+
+function saveFileHistory(entry){
+  var hist=JSON.parse(localStorage.getItem(FILE_SCAN_HISTORY_KEY)||'[]');
+  hist.unshift(entry);if(hist.length>15)hist=hist.slice(0,15);
+  localStorage.setItem(FILE_SCAN_HISTORY_KEY,JSON.stringify(hist));
+}
+function loadFileHistory(){
+  var hist=JSON.parse(localStorage.getItem(FILE_SCAN_HISTORY_KEY)||'[]');
+  var el=document.getElementById('fileHistoryList');if(!el)return;
+  if(!hist.length){el.innerHTML='<div style="font-size:10px;color:var(--dim);">No files scanned yet.</div>';return;}
+  el.innerHTML=hist.map(function(h){
+    var r=h.result;
+    var clean=r&&r.malicious===0&&(!r.flags||r.flags.length===0);
+    return '<div class="scan-kv">'
+      +'<span class="scan-kv-k" style="font-size:9px;">'+escH(h.filename)+'</span>'
+      +'<span style="display:flex;align-items:center;gap:8px;">'
+      +(clean?'<span style="color:var(--green);font-size:9px;">✓ CLEAN</span>':'<span style="color:var(--red);font-size:9px;">⚠ FLAGGED</span>')
+      +'<span style="font-size:8px;color:var(--dim);">'+timeAgo(h.ts)+'</span>'
+      +'</span></div>';
+  }).join('');
+}
+function clearFileHistory(){
+  localStorage.removeItem(FILE_SCAN_HISTORY_KEY);
+  loadFileHistory();toast('History cleared');
+}
+
+function loadInitialData(){
+  ensureModAccount();
+  buildModGrid();
+  buildModGrid2();
+  buildGameModGrid();
+  loadCallouts();
+  loadForumThreads();
+  loadEvents();
+  updateHomeStats();
+  renderAccGrid();
+  loadUrlHistory();
+  loadFileHistory();
+  /* Restore theme */
+  try{var t=localStorage.getItem('tb:theme');if(t)setTheme(t,null);}catch(e){}
+  /* Check for shared announcement on load */
+  checkSharedAnnouncement();
+  /* VC polling */
+  setInterval(function(){if(!vcJoined)renderVcBar(getVcUsers());},4000);
+}
 
 
 </script>
